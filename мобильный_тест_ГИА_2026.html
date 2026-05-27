@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#2d5d9f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Тренажёр ГИА 2026 · 120 вопросов</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --surface-2: #faf9f6;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --text-soft: #9a9a9a;
+    --border: #e4e2dc;
+    --primary: #2d5d9f;
+    --primary-dark: #1e4477;
+    --primary-bg: #e8f0fa;
+    --success: #2d7a4e;
+    --success-bg: #e6f3eb;
+    --danger: #b03b3b;
+    --danger-bg: #fbecec;
+    --warning: #a96a18;
+    --warning-bg: #fbf2e2;
+    --radius: 12px;
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  body {
+    padding-top: var(--safe-top);
+    padding-bottom: var(--safe-bottom);
+  }
+
+  /* === SCREENS === */
+  .screen {
+    display: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 16px;
+    padding-top: calc(var(--safe-top) + 16px);
+    padding-bottom: calc(var(--safe-bottom) + 24px);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .screen.active { display: block; }
+
+  /* === HEADER === */
+  .app-title {
+    margin: 0 0 4px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .app-sub {
+    margin: 0 0 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  h2.section-title {
+    margin: 22px 0 10px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  h2.section-title:first-child { margin-top: 4px; }
+
+  /* === CARDS === */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  /* === MODE TILES (single column on mobile) === */
+  .modes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .mode-tile {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .mode-tile.selected {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+  }
+  .mode-tile-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .mode-tile-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* === TOPIC CHIPS === */
+  .topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .chip {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    padding: 7px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    font: inherit;
+    color: inherit;
+    font-weight: 500;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .chip.selected {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .chip-count {
+    opacity: 0.7;
+    margin-left: 4px;
+    font-size: 11px;
+  }
+
+  /* === TOGGLES === */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 14px;
+  }
+  .toggle-row + .toggle-row { border-top: 1px solid var(--border); }
+  .toggle-label { color: var(--text); }
+  .toggle {
+    width: 44px;
+    height: 26px;
+    background: #c9c6bd;
+    border-radius: 999px;
+    border: none;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: var(--primary); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+  .toggle.on::after { transform: translateX(18px); }
+
+  /* === BUTTONS === */
+  .btn {
+    display: inline-block;
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: opacity 0.15s;
+  }
+  .btn:active { opacity: 0.7; }
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .btn-primary:disabled {
+    background: #c9c6bd;
+    border-color: #c9c6bd;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border);
+  }
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .btn-row .btn { flex: 1; }
+
+  /* === QUIZ === */
+  .quiz-header {
+    margin-bottom: 12px;
+  }
+  .progress-bar {
+    background: var(--border);
+    height: 5px;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .progress-fill {
+    background: var(--primary);
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+  .quiz-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .topic-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .question-text {
+    font-size: 17px;
+    line-height: 1.45;
+    font-weight: 500;
+    margin: 12px 0 16px;
+  }
+
+  /* === OPTIONS === */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .option {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .option:active:not(:disabled) {
+    background: var(--primary-bg);
+  }
+  .option:disabled { cursor: default; }
+  .option-letter {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .option-text {
+    flex: 1;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .option.correct {
+    border-color: var(--success);
+    background: var(--success-bg);
+  }
+  .option.correct .option-letter {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+  }
+  .option.incorrect {
+    border-color: var(--danger);
+    background: var(--danger-bg);
+  }
+  .option.incorrect .option-letter {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+  }
+  .option.dimmed { opacity: 0.55; }
+
+  /* === EXPLANATION === */
+  .explanation {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--primary-bg);
+    border-left: 3px solid var(--primary);
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .explanation.correct {
+    background: var(--success-bg);
+    border-left-color: var(--success);
+  }
+  .explanation.incorrect {
+    background: var(--warning-bg);
+    border-left-color: var(--warning);
+  }
+  .explanation-label {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .explanation.correct .explanation-label { color: var(--success); }
+  .explanation.incorrect .explanation-label { color: var(--warning); }
+
+  /* === RESULTS === */
+  .score-display {
+    text-align: center;
+    padding: 16px 0 8px;
+  }
+  .score-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: var(--primary-bg);
+    color: var(--primary-dark);
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .score-circle.excellent { background: var(--success-bg); color: var(--success); }
+  .score-circle.good { background: var(--primary-bg); color: var(--primary-dark); }
+  .score-circle.average { background: var(--warning-bg); color: var(--warning); }
+  .score-circle.poor { background: var(--danger-bg); color: var(--danger); }
+  .score-percent {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .score-fraction {
+    font-size: 13px;
+    margin-top: 4px;
+    opacity: 0.85;
+  }
+  .score-msg {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 16px;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .stat {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* === REVIEW === */
+  .review-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--danger);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .review-item.correct { border-left-color: var(--success); }
+  .review-meta {
+    font-size: 11px;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .review-q {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .review-ans {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .review-ans .wrong-text {
+    color: var(--danger);
+    text-decoration: line-through;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .review-ans .right-text {
+    color: var(--success);
+    font-weight: 500;
+    display: block;
+  }
+
+  .hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 8px 0 0;
+  }
+
+  /* === FOOTER BUTTONS (sticky for quiz) === */
+  .quiz-footer {
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent, var(--bg) 30%);
+    padding: 16px 0 calc(var(--safe-bottom) + 4px);
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== START SCREEN ===== -->
+<div id="start-screen" class="screen active">
+  <h1 class="app-title">Тренажёр ГИА 2026</h1>
+  <p class="app-sub">PR, реклама, маркетинг, коммуникации · 120 вопросов</p>
+
+  <h2 class="section-title">Режим тестирования</h2>
+  <div class="modes">
+    <button class="mode-tile selected" data-mode="all">
+      <div class="mode-tile-title">Полный тест (120)</div>
+      <div class="mode-tile-desc">Все вопросы по программе ГИА</div>
+    </button>
+    <button class="mode-tile" data-mode="short">
+      <div class="mode-tile-title">Короткий (30)</div>
+      <div class="mode-tile-desc">30 случайных вопросов</div>
+    </button>
+    <button class="mode-tile" data-mode="mini">
+      <div class="mode-tile-title">Мини (15)</div>
+      <div class="mode-tile-desc">Быстрая самопроверка</div>
+    </button>
+    <button class="mode-tile" data-mode="topic">
+      <div class="mode-tile-title">По темам</div>
+      <div class="mode-tile-desc">Выберите интересующие темы</div>
+    </button>
+  </div>
+
+  <div id="topics-block" style="display:none">
+    <h2 class="section-title">Выберите темы</h2>
+    <div class="topics" id="topics"></div>
+    <button class="btn btn-secondary" id="select-all-topics" style="margin-top:10px; padding:10px; font-size:13px;">Выбрать все</button>
+  </div>
+
+  <h2 class="section-title">Настройки</h2>
+  <div class="card" style="padding: 4px 16px;">
+    <div class="toggle-row">
+      <span class="toggle-label">Перемешивать вопросы</span>
+      <button class="toggle on" id="t-shuffle-q" aria-label="Перемешивать вопросы"></button>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Перемешивать ответы</span>
+      <button class="toggle on" id="t-shuffle-o" aria-label="Перемешивать ответы"></button>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Показывать объяснения</span>
+      <button class="toggle on" id="t-explain" aria-label="Показывать объяснения"></button>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" id="start-btn" style="margin-top:16px;">Начать тест</button>
+  <p class="hint" id="count-info"></p>
+</div>
+
+<!-- ===== QUIZ SCREEN ===== -->
+<div id="quiz-screen" class="screen">
+  <div class="quiz-header">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="quiz-meta">
+      <span id="progress-text">Вопрос 1 из 120</span>
+      <span class="topic-pill" id="topic-pill">Тема</span>
+    </div>
+  </div>
+
+  <div class="question-text" id="question-text"></div>
+  <div class="options" id="options"></div>
+
+  <div class="explanation" id="explanation">
+    <div class="explanation-label" id="explanation-label">Пояснение</div>
+    <div id="explanation-text"></div>
+  </div>
+
+  <div class="quiz-footer">
+    <button class="btn btn-primary" id="next-btn" disabled>Далее →</button>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="exit-btn" style="font-size:14px; padding:10px;">Завершить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RESULTS SCREEN ===== -->
+<div id="results-screen" class="screen">
+  <div class="score-display">
+    <div class="score-circle" id="score-circle">
+      <div class="score-percent" id="score-percent">0%</div>
+      <div class="score-fraction" id="score-fraction">0 / 0</div>
+    </div>
+    <div class="score-msg" id="score-msg"></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value" id="stat-correct" style="color: var(--success);">0</div>
+      <div class="stat-label">Верных</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="stat-wrong" style="color: var(--danger);">0</div>
+      <div class="stat-label">Неверных</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="stat-total">0</div>
+      <div class="stat-label">Всего</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="stat-time">0:00</div>
+      <div class="stat-label">Время</div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" id="retry-btn">Пройти ещё раз</button>
+  <div class="btn-row">
+    <button class="btn btn-secondary" id="home-btn">Настройки</button>
+    <button class="btn btn-secondary" id="review-btn">Разбор</button>
+  </div>
+
+  <div id="review-section" style="display:none; margin-top:20px;">
+    <h2 class="section-title" id="wrong-title" style="color: var(--danger);">Ошибки</h2>
+    <div id="wrong-list"></div>
+    <h2 class="section-title" id="correct-title" style="color: var(--success);">Правильные</h2>
+    <div id="correct-list"></div>
+  </div>
+</div>
+
+<script>
+// ===== ДАННЫЕ (120 ВОПРОСОВ) =====
+const QUESTIONS = [{"num": 1, "topic": "Теории коммуникации", "q": "Г. Лассуэлл о пропаганде. Как Лассуэлл определял пропаганду?", "correct": "Менеджмент коллективных мнений с помощью манипуляций значимыми символами", "distractors": ["Распространение идей через средства массовой информации", "Психологическое давление на индивидуальное сознание", "Целенаправленное формирование общественного мнения через рекламу"]}, {"num": 2, "topic": "PR: основы", "q": "Какова роль связей с общественностью в современном обществе?", "correct": "Управление коммуникациями между организацией и её целевой аудиторией, направленное на формирование и поддержание положительного имиджа, репутации и доверия", "distractors": ["Прямые продажи товаров и услуг через медиа-каналы", "Контроль за деятельностью средств массовой информации", "Замещение государственной пропаганды частной"]}, {"num": 3, "topic": "Теории коммуникации", "q": "Кто разработал нормативные модели функционирования массмедиа в обществе?", "correct": "Денис Маккуэйл", "distractors": ["Маршалл Маклюэн", "Гарольд Лассуэлл", "Уолтер Липпман"]}, {"num": 4, "topic": "Общественное мнение", "q": "Кому принадлежит концепция «Спирали молчания»?", "correct": "Элизабет Ноэль-Нойман", "distractors": ["Пол Лазарсфельд", "Денис Маккуэйл", "Эверетт Роджерс"]}, {"num": 5, "topic": "Технологии влияния", "q": "Какая технология манипуляции означает: «СМИ не говорят людям, что именно они должны думать, но диктуют им, о чем они должны думать»?", "correct": "Навязывание повестки дня", "distractors": ["Фрейминг", "Прайминг", "Мейнстриминг"]}, {"num": 6, "topic": "Теории коммуникации", "q": "Что подразумевается под «высшей формой информации» в информационном обществе?", "correct": "Знания, особенно приобретенные в процессе научной деятельности", "distractors": ["Большие данные (Big Data)", "Новостные сообщения СМИ", "Алгоритмы соцсетей"]}, {"num": 7, "topic": "Теории коммуникации", "q": "Кто считается автором определения «медиа – это сообщение»?", "correct": "Маршалл Маклюэн", "distractors": ["Гарольд Лассуэлл", "Уолтер Липпман", "Элизабет Ноэль-Нойман"]}, {"num": 8, "topic": "Теории коммуникации", "q": "Какие функции медиа НЕ относятся к способствующим развитию культурного обмена?", "correct": "Идеологическая, рекреативная, коммерческая, управленческая, сегрегационная, сенсационная", "distractors": ["Образовательная, просветительская, информационная", "Аналитическая, прогностическая, организаторская", "Интегрирующая, объединяющая, диалоговая"]}, {"num": 9, "topic": "Теории коммуникации", "q": "Согласно теории Уолтера Липпмана, существует расхождение между…", "correct": "Реальным миром и «псевдосредой» — ментальной картинкой, созданной новостями, слухами и стереотипами", "distractors": ["Властью и обществом", "Журналистами и аудиторией СМИ", "Пропагандой и рекламой"]}, {"num": 10, "topic": "Теории коммуникации", "q": "Согласно теории ограниченных эффектов, влияние СМИ НЕ зависит от…", "correct": "Самого содержания медиа как такового в изоляции от социальных факторов", "distractors": ["Лидеров мнений", "Социального статуса аудитории", "Межличностных отношений"]}, {"num": 11, "topic": "Теории коммуникации", "q": "Какую роль играют медиа согласно теории инноваций Эверетта Роджерса?", "correct": "Источник первичной информации (осведомленность), создание «повестки дня», влияние на ранних последователей", "distractors": ["Заменяют межличностное общение в процессе принятия инноваций", "Препятствуют распространению новых идей", "Только информируют о технических характеристиках"]}, {"num": 12, "topic": "Теории коммуникации", "q": "Что НЕ характерно для либертарианской модели прессы?", "correct": "Государственный контроль, цензура, лицензирование прессы, подчинение СМИ интересам власти или партии", "distractors": ["Свобода слова и печати", "Частная собственность на СМИ", "Свободная конкуренция мнений на «рынке идей»"]}, {"num": 13, "topic": "PR: основы", "q": "Что такое медиарилейшнз как направление пиар-деятельности?", "correct": "Направление PR, связанное с выстраиванием и поддержанием отношений со средствами массовой информации (СМИ)", "distractors": ["Управление внутренними коммуникациями организации", "Реклама в средствах массовой информации", "Государственное регулирование деятельности СМИ"]}, {"num": 14, "topic": "PR: основы", "q": "Какая из перечисленных стратегий относится к фундаментальным стратегиям PR?", "correct": "Сегментация аудитории, позиционирование бренда, создание нарратива бренда, интегрированные коммуникации", "distractors": ["Манипуляция фактами и сокрытие информации", "Прямые продажи и личные коммуникации", "Бухгалтерский учёт и финансовое планирование"]}, {"num": 15, "topic": "PR: основы", "q": "Чем отличается целевая аудитория от контактной группы в PR?", "correct": "Целевая аудитория — стратегически выбранная часть контактных групп, на которую направлены PR-усилия; контактные группы — все группы общественности, контактирующие с организацией", "distractors": ["Это полностью идентичные понятия", "Целевая аудитория шире контактной группы", "Контактная группа — это только потенциальные покупатели"]}, {"num": 16, "topic": "PR: основы", "q": "С чего начинается работа по подготовке мероприятия?", "correct": "С определения цели и задач: «зачем?» — что мы хотим получить в итоге", "distractors": ["С поиска и аренды площадки", "С приглашения подрядчиков", "С определения даты"]}, {"num": 17, "topic": "PR: основы", "q": "Процесс планирования и реализации коммуникационных стратегий для достижения целей связей с общественностью — это…", "correct": "PR-деятельность (паблик рилейшнз, PR)", "distractors": ["Реклама", "Маркетинг", "Брендинг"]}, {"num": 18, "topic": "ИМК и стратегия", "q": "Короткая фраза, раскрывающая суть компании, продукта, персоны — это…", "correct": "Слоган", "distractors": ["Логотип", "Маскот", "Брендбук"]}, {"num": 19, "topic": "PR: основы", "q": "Что включает в себя цикл управления пиар-кампаниями RACE?", "correct": "Research (Исследование), Action planning (Планирование действий), Communication (Выполнение), Evaluation (Оценка)", "distractors": ["Reach, Act, Convert, Engage", "Plan, Do, Check, Act", "Research, Analysis, Creative, Execution"]}, {"num": 20, "topic": "Антикризисный PR", "q": "Антикризисный пиар — это вид деятельности, направленный на…", "correct": "Минимизацию негативных последствий кризисной ситуации для репутации компании, бренда или организации, а также на сохранение доверия клиентов, партнёров и общественности", "distractors": ["Создание новых продуктов в период экономической нестабильности", "Привлечение инвестиций в момент кризиса", "Полное игнорирование негативных событий до их завершения"]}, {"num": 21, "topic": "Антикризисный PR", "q": "С точки зрения антикризисного пиара, репутационный кризис — это…", "correct": "Неожиданное событие или ряд событий, выходящих из-под контроля, которые прерывают нормальное функционирование организации, привлекая нежелательное внимание общественности и нанося ущерб репутации бренда", "distractors": ["Плановое снижение продаж в межсезонье", "Реструктуризация компании по решению руководства", "Запуск нового продукта на рынок"]}, {"num": 22, "topic": "Антикризисный PR", "q": "Антикризисный пиар представляет собой…", "correct": "Комплекс мероприятий по прогнозированию, недопущению или преодолению кризиса репутации", "distractors": ["Только реакцию на уже произошедшие кризисы", "Деятельность по созданию кризисных ситуаций у конкурентов", "Управление финансовыми рисками организации"]}, {"num": 23, "topic": "Антикризисный PR", "q": "Какой принцип ОТНОСИТСЯ к основным принципам антикризисного пиара?", "correct": "Скорость и работа на опережение: реакция компании должна последовать в первые сутки кризиса", "distractors": ["Замалчивание проблемы до завершения внутренних расследований", "Минимизация коммуникаций с журналистами", "Делегирование общения с прессой случайным сотрудникам"]}, {"num": 24, "topic": "Бренд / Репутация / Имидж", "q": "Каково соотношение понятий «бренд», «репутация», «имидж»?", "correct": "Имидж — инструмент формирования восприятия; репутация — результат оценки деятельности; бренд — комплексное образование, объединяющее имидж и репутацию", "distractors": ["Это полностью тождественные синонимы", "Имидж шире бренда и репутации", "Репутация — это только финансовые показатели"]}, {"num": 25, "topic": "Бренд / Репутация / Имидж", "q": "Что такое брендинг в системе корпоративных коммуникаций?", "correct": "Процесс создания и развития бренда, то есть устойчивого образа компании, продукта или услуги в сознании аудитории", "distractors": ["Процесс смены логотипа компании", "Деятельность по продаже товаров", "Финансовая оценка стоимости компании"]}, {"num": 26, "topic": "Маркетинг и реклама", "q": "Что такое маркетинговые исследования?", "correct": "Систематический сбор, анализ и интерпретация данных о рынке, потребителях и конкурентах", "distractors": ["Только подсчёт продаж компании", "Реклама товаров на массовом рынке", "Аудиторская проверка финансовой отчётности"]}, {"num": 27, "topic": "ИМК и стратегия", "q": "Что относится к инструментам интегрированных коммуникаций?", "correct": "Реклама, PR, стимулирование сбыта, прямой маркетинг, личные продажи, цифровой онлайн-маркетинг, SMM, сарафанное радио, ивенты и спонсорство", "distractors": ["Только реклама и PR", "Только цифровые инструменты онлайн-продвижения", "Только событийный маркетинг"]}, {"num": 28, "topic": "Маркетинг и реклама", "q": "В чём основное различие пиара, маркетинга и рекламы?", "correct": "Маркетинг отвечает на вопрос «что и для кого производить?», реклама — «как заставить купить прямо сейчас?», пиар — «почему этой компании стоит доверять в долгую?»", "distractors": ["Это три названия одного и того же вида деятельности", "Маркетинг занимается только производством, реклама — только продажами, PR — только госорганами", "Маркетинг — для B2B, реклама — для B2C, PR — для государства"]}, {"num": 29, "topic": "Маркетинг и реклама", "q": "Чем спонсорство отличается от благотворительности?", "correct": "Спонсорство — взаимовыгодное сотрудничество с условием распространения рекламы о спонсоре; благотворительность не предполагает финансовых и других обязательств со стороны получателя", "distractors": ["Это полностью синонимичные понятия", "Спонсорство — безвозмездно, благотворительность — за деньги", "Спонсорство только для спорта, благотворительность только для культуры"]}, {"num": 30, "topic": "Бренд / Репутация / Имидж", "q": "Какова роль коммуникаций в процессе создания и развития бренда?", "correct": "Центральная и стратегическая: бренд — это устойчивый образ и репутация, которые формируются исключительно в сознании потребителя через коммуникацию", "distractors": ["Вспомогательная, не влияющая на восприятие бренда", "Только техническая — для производства упаковки", "Сводится к выбору названия и логотипа"]}, {"num": 31, "topic": "ИМК и стратегия", "q": "В чём сущность интегрированных маркетинговых коммуникаций (ИМК)?", "correct": "Концепция согласованного использования всех коммуникационных инструментов компании, при которой реклама, PR, стимулирование сбыта, личные продажи и бренд-коммуникации объединяются в единую систему", "distractors": ["Использование одного инструмента продвижения за раз", "Разделение каналов коммуникации между разными отделами без координации", "Применение исключительно цифровых каналов продвижения"]}, {"num": 32, "topic": "Маркетинг и реклама", "q": "Понятие «целевая аудитория» в маркетинге — это…", "correct": "Группа людей с общими характеристиками, на которых бизнес направляет свои рекламные усилия и маркетинговые сообщения", "distractors": ["Всё население страны без исключений", "Только постоянные клиенты компании", "Сотрудники самой организации"]}, {"num": 33, "topic": "Маркетинг и реклама", "q": "Что из перечисленного НЕ относится к демографическим критериям сегментирования аудитории?", "correct": "Образ жизни и ценности (это психографические критерии)", "distractors": ["Возраст", "Пол", "Уровень дохода"]}, {"num": 34, "topic": "Маркетинг и реклама", "q": "ATL-реклама предполагает…", "correct": "Прямое, стандартное однонаправленное воздействие с помощью массовой рекламы через каналы с наибольшим охватом и наименьшей персонализацией", "distractors": ["Только персонализированную рассылку email-сообщений", "Прямые продажи в магазинах", "Только цифровые каналы интернет-рекламы"]}, {"num": 35, "topic": "Маркетинг и реклама", "q": "Выборка, анкета, интервью, анализ результатов являются элементами…", "correct": "Социологического исследования (социальных исследований)", "distractors": ["Бухгалтерского аудита", "Технической экспертизы товара", "Юридической проверки документов"]}, {"num": 36, "topic": "ИМК и стратегия", "q": "Использование в рамках единой стратегии всей системы коммуникативных методов и инструментов для продвижения товара или услуги — это…", "correct": "Интегрированные маркетинговые коммуникации (ИМК)", "distractors": ["Прямой маркетинг", "ATL-кампания", "Партизанский маркетинг"]}, {"num": 37, "topic": "Бренд / Репутация / Имидж", "q": "В рамках чего происходит репозиционирование бренда?", "correct": "В рамках ребрендинга (как один из его ключевых аспектов)", "distractors": ["В рамках антикризисного PR", "В рамках стимулирования сбыта", "В рамках внутрикорпоративных коммуникаций"]}, {"num": 38, "topic": "Бренд / Репутация / Имидж", "q": "Коммуникативное качество бренда (обещание) основано на…", "correct": "Его способности поддерживать отношения с потребителями, суммируя все характеристики функционального, индивидуального и социального качества и предлагая особые выгоды потребителю", "distractors": ["Только на технических характеристиках товара", "Только на цене продукта", "Только на известности логотипа"]}, {"num": 39, "topic": "Бренд / Репутация / Имидж", "q": "Как называется бренд, объединяющий товары разных продуктовых линий или одной линии, но различающихся по назначению?", "correct": "Зонтичный", "distractors": ["Премиальный", "Корпоративный", "Локальный"]}, {"num": 40, "topic": "Маркетинг и реклама", "q": "Сегментация рынка — это…", "correct": "Процесс разделения общего рынка на относительно однородные группы потребителей (сегменты), которые имеют схожие потребности, поведение или характеристики, и требуют разных маркетинговых подходов", "distractors": ["Снижение цен на товары для всех групп покупателей", "Объединение разных рынков в один общий", "Запрет на продажу товаров отдельным группам"]}, {"num": 41, "topic": "Маркетинг и реклама", "q": "Позиционирование — это…", "correct": "Действия по обеспечению товару конкурентоспособного положения на рынке и разработка соответствующего комплекса маркетинга (по Котлеру)", "distractors": ["Физическое размещение товара на полке магазина", "Финансовое позиционирование компании на бирже", "Определение должностных обязанностей сотрудников"]}, {"num": 42, "topic": "Маркетинг и реклама", "q": "Жизненный цикл товара — это…", "correct": "Период времени, охватывающий все этапы существования продукта на рынке: разработка, внедрение, рост, зрелость, спад", "distractors": ["Гарантийный срок эксплуатации товара", "Время доставки товара покупателю", "Срок годности продукции"]}, {"num": 43, "topic": "Бренд / Репутация / Имидж", "q": "Брендинг — это…", "correct": "Маркетинговая деятельность по созданию особого отношения целевой группы потребителей к бренду, которая формирует долгосрочное предпочтение и лояльность к нему", "distractors": ["Процесс производства товаров под маркой", "Аудит финансовой отчётности компании", "Юридическая регистрация торговой марки"]}, {"num": 44, "topic": "Маркетинг и реклама", "q": "Что включает в себя цикл управления маркетинговыми кампаниями PDCA?", "correct": "Plan (Планирование), Do (Выполнение), Check (Проверка), Act (Действие)", "distractors": ["Research, Action, Communication, Evaluation", "Reach, Act, Convert, Engage", "Product, Price, Place, Promotion"]}, {"num": 45, "topic": "ИМК и стратегия", "q": "Что входит в комплекс интегрированных коммуникаций?", "correct": "Реклама, связи с общественностью (PR), стимулирование сбыта, прямой маркетинг, личные продажи, цифровые коммуникации, брендинг, event-коммуникации", "distractors": ["Только реклама на телевидении и радио", "Только работа со СМИ", "Только продажи через интернет"]}, {"num": 46, "topic": "ИМК и стратегия", "q": "Что необходимо проанализировать при построении стратегии ИМК?", "correct": "Положение компании (SWOT-анализ), целевую аудиторию, текущие коммуникации, результаты маркетинговой деятельности, конкурентов, точки контакта с клиентом", "distractors": ["Только бюджет на рекламу", "Только курсы валют и инфляцию", "Только зарплаты сотрудников отдела маркетинга"]}, {"num": 47, "topic": "Маркетинг и реклама", "q": "Как рассчитывается рейтинг ТВ-передачи в агломерации из двух городов с разной численностью аудитории?", "correct": "Через взвешенное среднее: перевод рейтинга в абсолютное количество зрителей в каждом городе, суммирование и обратный пересчёт в процент от общей аудитории", "distractors": ["Как простое среднее арифметическое рейтингов двух городов", "Как сумма рейтингов двух городов", "Как максимальный из двух рейтингов"]}, {"num": 48, "topic": "Digital и SMM", "q": "Какие инструменты онлайн-продвижения используются в SMM?", "correct": "Контентные форматы (посты, видео, Stories), таргетированная реклама, посевы в сообществах, чат-боты, конкурсы, AR-фильтры, аналитические сервисы", "distractors": ["Только наружная реклама на билбордах", "Только печатная реклама в газетах", "Только прямые продажи по телефону"]}, {"num": 49, "topic": "Digital и SMM", "q": "Что такое система метрик в контексте разработки коммуникационной стратегии?", "correct": "Совокупность показателей, с помощью которых организация оценивает эффективность своих коммуникаций, степень достижения поставленных целей и влияние коммуникационной деятельности на бизнес-результаты", "distractors": ["Только финансовые показатели прибыли", "Только количество сотрудников отдела маркетинга", "Только размер рекламного бюджета"]}, {"num": 50, "topic": "Контент и тексты", "q": "Если вы хотите, чтобы создаваемый вами контент заинтересовал, следует…", "correct": "Определить мотивы, аргументы в пользу покупки и основную идею кампании; применять формы и методы, подходящие именно вашей аудитории; привлечь внимание и вызвать интерес", "distractors": ["Создавать контент по модным шаблонам без учёта аудитории", "Использовать только сложную профессиональную терминологию", "Копировать контент конкурентов без изменений"]}, {"num": 51, "topic": "Digital и SMM", "q": "Какую информацию можно получить из отчётов Яндекс.Метрики?", "correct": "Посещаемость сайта, источники трафика, поисковые запросы, сведения об аудитории, поведение пользователей, цели и конверсии, данные для интернет-магазинов", "distractors": ["Только количество подписчиков в социальных сетях", "Только данные о сотрудниках компании", "Только финансовую отчётность бизнеса"]}, {"num": 52, "topic": "Digital и SMM", "q": "Что представляют собой цифровые спецпроекты?", "correct": "Нестандартные маркетинговые активности в цифровом пространстве, которые выходят за рамки традиционных рекламных форматов и используют креативные подходы для привлечения внимания и вовлечения аудитории", "distractors": ["Стандартные баннерные кампании в интернете", "Только email-рассылки клиентам", "Только публикации пресс-релизов"]}, {"num": 53, "topic": "Digital и SMM", "q": "Что чаще всего НЕ отображается в контент-плане?", "correct": "Полный готовый текст постов или публикаций (это документ для планирования, а не хранения контента)", "distractors": ["Дата и время публикации", "Тема и формат поста", "Ответственный за публикацию"]}, {"num": 54, "topic": "Digital и SMM", "q": "Что такое «вовлечение» в контексте продвижения в социальных сетях?", "correct": "Любое действие, выходящее за рамки простого воздействия (exposure), которое подразумевает взаимодействие между двумя или более сторонами и совершается в ответ на контент", "distractors": ["Покупка рекламы у блогеров", "Количество подписчиков в группе", "Регистрация аккаунта в социальной сети"]}, {"num": 55, "topic": "Внутренние коммуникации", "q": "Внутренний сайт — это…", "correct": "Корпоративный интранет-ресурс (веб-ресурс) организации, предназначенный для использования сотрудниками и обеспечивающий внутренние коммуникации, доступ к информации и рабочим материалам компании", "distractors": ["Сайт-визитка для клиентов", "Лендинг для рекламной кампании", "Сайт интернет-магазина"]}, {"num": 56, "topic": "Digital и SMM", "q": "Целями диджитал-маркетинга являются…", "correct": "Рост продаж и прибыли, привлечение новых клиентов, повышение узнаваемости бренда, удержание клиентов и повышение лояльности, генерация трафика и конверсии, взаимодействие с аудиторией", "distractors": ["Только уменьшение расходов на офисную аренду", "Только наём новых сотрудников в IT-отдел", "Только проведение корпоративных мероприятий"]}, {"num": 57, "topic": "Digital и SMM", "q": "Что включает в себя модель управления диджитал-маркетингом pRACE?", "correct": "Plan (Планирование), Reach (Охват), Act (Действие), Convert (Конверсия), Engage (Вовлечённость)", "distractors": ["Plan, Do, Check, Act", "Research, Action, Communication, Evaluation", "Product, Price, Place, Promotion"]}, {"num": 58, "topic": "Digital и SMM", "q": "Какие виды маркетинговых кампаний используются в цифровой среде?", "correct": "Поисковые (SEM), SMM, контент-маркетинг, email-маркетинг, видеомаркетинг, медийные (баннерные), вирусный маркетинг, ретаргетинг, партнёрский маркетинг, омниканальные", "distractors": ["Только наружная реклама на улицах города", "Только реклама в печатных газетах", "Только прямые продажи по телефону"]}, {"num": 59, "topic": "Контент и тексты", "q": "Что такое ключевое сообщение рекламной кампании?", "correct": "Система основных информационных элементов («конструктор»), из которых в зависимости от ситуации, канала коммуникации и целевой аудитории создаются конкретные рекламные обращения", "distractors": ["Полный готовый текст рекламного ролика", "Логотип и фирменные цвета бренда", "Список каналов размещения рекламы"]}, {"num": 60, "topic": "Маркетинг и реклама", "q": "Что является основной целью стимулирующей рекламы?", "correct": "Побудить потребителя к покупке или другому целевому действию в ближайшее время, то есть стимулировать спрос и сбыт товара или услуги", "distractors": ["Долгосрочное формирование имиджа бренда", "Информирование о новой технологии без продаж", "Снижение конкуренции на рынке"]}, {"num": 61, "topic": "Правовые основы", "q": "Как Федеральный закон 38-ФЗ «О рекламе» определяет понятие «реклама»?", "correct": "Информация, распространенная любым способом, в любой форме и с использованием любых средств, адресованная неопределенному кругу лиц и направленная на привлечение внимания к объекту рекламирования, формирование или поддержание интереса к нему и его продвижение на рынке", "distractors": ["Любая платная информация в средствах массовой информации", "Только публикации в коммерческих СМИ", "Сведения, обязательные для размещения на упаковке товара"]}, {"num": 62, "topic": "Правовые основы", "q": "Что составляет специальное ядро системы правового регулирования рекламной деятельности в РФ?", "correct": "Федеральный закон от 13 марта 2006 года № 38-ФЗ «О рекламе»", "distractors": ["Федеральный закон «О защите прав потребителей»", "Гражданский кодекс Российской Федерации", "Кодекс об административных правонарушениях"]}, {"num": 63, "topic": "Правовые основы", "q": "Является ли обязательным для рекламораспространителя заключение договора на распространение социальной рекламы?", "correct": "Да, является обязательным и составляет 5% годового объёма распространяемой им рекламы (ч. 3 ст. 10 ФЗ № 38-ФЗ)", "distractors": ["Нет, это полностью добровольная деятельность", "Только для государственных СМИ", "Только для печатных изданий тиражом свыше 10 000 экземпляров"]}, {"num": 64, "topic": "Правовые основы", "q": "Как реализуется принцип законности правового регулирования рекламы в РФ?", "correct": "Через обязательное соответствие рекламы требованиям законодательства РФ: реклама должна быть добросовестной, достоверной, не нарушать установленные законом запреты и ограничения", "distractors": ["Через свободное толкование закона рекламодателями", "Через применение только международных стандартов", "Через отсутствие государственного контроля"]}, {"num": 65, "topic": "Бренд / Репутация / Имидж", "q": "Что такое репутация?", "correct": "Общее мнение о достоинствах и недостатках субъекта; совокупность мнений заинтересованных сторон (сотрудников, инвесторов, кредиторов, аналитиков, властей, СМИ и т.д.) о достоинствах и недостатках компании", "distractors": ["Только официальное мнение руководства компании", "Только финансовые показатели бизнеса", "Только количество публикаций в прессе"]}, {"num": 66, "topic": "Бренд / Репутация / Имидж", "q": "Что такое репутационный менеджмент?", "correct": "Управление процессом формирования и корректировки репутационных и имиджевых характеристик компании, а также доведение их до целевой аудитории", "distractors": ["Управление финансовыми потоками организации", "Управление персоналом и кадровыми вопросами", "Только удаление негативных отзывов из интернета"]}, {"num": 67, "topic": "Бренд / Репутация / Имидж", "q": "Имидж присущ…", "correct": "Любому публичному объекту (человеку, компании, товару, городу, государству), независимо от того, занимается ли он целенаправленным формированием имиджа или нет", "distractors": ["Только тем компаниям, которые целенаправленно его формируют", "Только публичным людям и политикам", "Только коммерческим организациям"]}, {"num": 68, "topic": "Бренд / Репутация / Имидж", "q": "Какое понятие описывает образ организации, формируемый в сознании общественности?", "correct": "Имидж организации", "distractors": ["Бренд", "Слоган", "Логотип"]}, {"num": 69, "topic": "Бренд / Репутация / Имидж", "q": "Что стоит делать с негативными отзывами?", "correct": "Отвечать публично там же, где появился отзыв; признавать проблему при её наличии; применять индивидуальный подход; писать понятно и лаконично, сохраняя уважительный тон", "distractors": ["Удалять все негативные комментарии без ответа", "Игнорировать и не реагировать", "Запугивать авторов отзывов юридическими угрозами"]}, {"num": 70, "topic": "ИМК и стратегия", "q": "При подготовке к проведению коммуникационной кампании в первую очередь…", "correct": "Определяется целевая аудитория (первый из 8 этапов разработки эффективных коммуникаций по Котлеру)", "distractors": ["Запускается рекламная кампания", "Утверждается бюджет без анализа аудитории", "Заключаются договоры со СМИ"]}, {"num": 71, "topic": "Прочее", "q": "Как называется деятельность, которая осуществляется на безвозмездной основе и не предполагает финансовых и прочих обязательств со стороны получающих поддержку?", "correct": "Благотворительность", "distractors": ["Спонсорство", "Партнёрство", "Инвестирование"]}, {"num": 72, "topic": "Правовые основы", "q": "Что такое товарный знак?", "correct": "Обозначение (словесное, изобразительное, объемное и т.д.), прошедшее официальную регистрацию в Роспатенте, служащее для индивидуализации товаров, производимых юридическими лицами или индивидуальными предпринимателями", "distractors": ["Любой логотип, нарисованный дизайнером", "Только название компании в учредительных документах", "Любое изображение в рекламном ролике"]}, {"num": 73, "topic": "Контент и тексты", "q": "Графический способ быстрой и чёткой передачи сложной информации с помощью схем и рисунков — это…", "correct": "Инфографика", "distractors": ["Сторителлинг", "Слоган", "Маскот"]}, {"num": 74, "topic": "Контент и тексты", "q": "По какому коммуникационному каналу передаются слухи?", "correct": "По неформальному коммуникационному каналу (вне официальных источников, без строгой регламентации, основанному на межличностном общении)", "distractors": ["По официальному государственному каналу", "По формальному корпоративному каналу", "Только по каналам печатных СМИ"]}, {"num": 75, "topic": "ИМК и стратегия", "q": "Разработка комплекса мероприятий, определяющих последовательность достижения конкретных целей с учётом возможностей наиболее эффективного использования ресурсов, — это…", "correct": "Стратегическое планирование (деятельности предприятия)", "distractors": ["Тактическое планирование на день", "Оперативный контроль ежедневных задач", "Бухгалтерский учёт расходов"]}, {"num": 76, "topic": "ИМК и стратегия", "q": "Какой вид коммуникаций желательно использовать для информирования приоритетных целевых аудиторий?", "correct": "Прямые и персонализированные коммуникации в рамках ИМК: direct marketing, CRM-коммуникации, таргетированная digital-реклама, личные продажи, PR-активности", "distractors": ["Только массовую рекламу на ТВ без таргетинга", "Только наружную рекламу на билбордах", "Только публикации в общенациональных газетах"]}, {"num": 77, "topic": "Контент и тексты", "q": "Для чего необходимо заранее ознакомиться со списком предполагаемых вопросов издания к фигуранту интервью?", "correct": "Для качественной подготовки интервью: определить цель беседы, собрать нужную информацию, продумать последовательность вопросов, предугадать реакцию собеседника, сохранить контроль над ходом интервью", "distractors": ["Чтобы отказаться от интервью при неудобных вопросах", "Чтобы изменить вопросы журналиста до публикации", "Чтобы запретить публикацию интервью"]}, {"num": 78, "topic": "Прочее", "q": "Креативность — это…", "correct": "Уровень творческой одарённости как устойчивая характеристика личности, проявляющаяся в способности создавать новое нетрадиционными способами за пределами общепринятых норм и технологий", "distractors": ["Умение копировать чужие идеи быстро", "Знание актуальных трендов в дизайне", "Способность работать в команде по инструкции"]}, {"num": 79, "topic": "Теории коммуникации", "q": "Коммуникация — это…", "correct": "Процесс передачи информации от одного человека к другому по разным каналам связи посредством общей системы знаков", "distractors": ["Только устное общение двух людей при встрече", "Только переписка по электронной почте", "Только публикации в СМИ"]}, {"num": 80, "topic": "Теории коммуникации", "q": "Как в модели социальной ответственности формулируется роль прессы в обществе?", "correct": "Сочетание свободы СМИ с их ответственностью перед обществом; пресса должна обеспечивать правдивость, точность, объективность и баланс", "distractors": ["Полная свобода СМИ без каких-либо ограничений", "Полное подчинение СМИ интересам государства", "Преимущественное обслуживание интересов частных собственников"]}, {"num": 81, "topic": "Общественное мнение", "q": "Кто такие лидеры общественного мнения?", "correct": "Люди, чьё мнение оказывает значительное влияние на взгляды и поведение широкой аудитории: эксперты, блогеры, активисты", "distractors": ["Только главы государств и министры", "Только владельцы крупных СМИ", "Только основатели партий"]}, {"num": 82, "topic": "Контент и тексты", "q": "Что такое контент?", "correct": "Любой информационный продукт, который создается, распространяется и используется через различные медиа-каналы: тексты, изображения, видео, аудио, интерактивные элементы", "distractors": ["Только рекламные тексты в газетах", "Только видеоматериалы на телевидении", "Только программный код сайтов"]}, {"num": 83, "topic": "Контент и тексты", "q": "По какой формуле должен быть написан продающий рекламный текст?", "correct": "AIDA: Attention (Внимание) — Interest (Интерес) — Desire (Желание) — Action (Действие)", "distractors": ["PDCA: Plan — Do — Check — Act", "SWOT: Strengths — Weaknesses — Opportunities — Threats", "RACE: Research — Action — Communication — Evaluation"]}, {"num": 84, "topic": "Контент и тексты", "q": "Что содействует лаконичности рекламного текста?", "correct": "Короткие предложения, активный залог и императивные конструкции; фокусировка на главном; использование сильных слов", "distractors": ["Длинные сложноподчинённые предложения", "Использование сложной профессиональной терминологии", "Подробное описание всех характеристик товара"]}, {"num": 85, "topic": "Контент и тексты", "q": "Для каких жанров медиатекстов основными требованиями являются взвешенность фактов, доказательность выводов и чёткая авторская позиция?", "correct": "Для аналитических жанров (статья, обзор, рецензия, комментарий, аналитическая корреспонденция, журналистское расследование)", "distractors": ["Для информационных жанров (заметка, репортаж)", "Для художественно-публицистических жанров (эссе, очерк)", "Для рекламных текстов и слоганов"]}, {"num": 86, "topic": "Контент и тексты", "q": "Что требуется для успешного написания рекламного текста?", "correct": "Чёткая цель и ориентация на целевую аудиторию, уникальное торговое предложение (УТП), лаконичность, оригинальность, призыв к действию (CTA), достоверность и соответствие законодательству", "distractors": ["Использование только сложной профессиональной лексики", "Максимальная длина текста с подробным описанием", "Копирование текстов конкурентов"]}, {"num": 87, "topic": "Контент и тексты", "q": "В чём специфика использования сторителлинга в B2B рекламе?", "correct": "Упрощение сложных концепций, создание доверия через кейсы, использование цифр и метрик, бизнес-языка, фокус на процессе и результате; ориентация на ЛПР и экспертов с рациональной мотивацией", "distractors": ["Использование только эмоциональных аргументов без фактов", "Полный отказ от историй в пользу сухих цифр", "Те же приёмы, что и в B2C, без различий"]}, {"num": 88, "topic": "Контент и тексты", "q": "Что относится к визуальному сторителлингу?", "correct": "Серия фотографий с историей, рекламный видеоролик с сюжетом, комикс, инфографика с развитием событий, плакатная серия, motion-дизайн, визуальный кейс бренда", "distractors": ["Обычная фотография товара без сюжета", "Логотип сам по себе без контекста", "Случайный набор красивых картинок"]}, {"num": 89, "topic": "Контент и тексты", "q": "В каком виде рекламы чаще других используется сторителлинг?", "correct": "В видеорекламе и имиджевой (брендовой) рекламе, а также в интернет-рекламе и нативной рекламе", "distractors": ["В контекстной поисковой рекламе", "В каталогах товаров и прайс-листах", "В классифайдах и объявлениях о продаже"]}, {"num": 90, "topic": "История PR", "q": "Какие коммуникационные революции выделяет современная наука?", "correct": "Революция языка (~40 000 лет назад), письменности (~3200–3000 до н.э.), книгопечатания (середина XV века), электрических коммуникаций (XIX – середина XX века), компьютерно-сетевая (с 1970-х)", "distractors": ["Только революция Интернета и социальных сетей", "Только изобретение печатного станка Гутенбергом", "Только промышленная революция XVIII века"]}, {"num": 91, "topic": "История PR", "q": "Каковы предпосылки появления пиара как профессиональной деятельности в России?", "correct": "Переход от советской системы к демократическому обществу, замена пропаганды на диалоговые формы, переход к рыночной экономике, политическая конкуренция, развитие СМИ, влияние западного опыта, развитие IT", "distractors": ["Указ Президента РФ 1992 года о создании отрасли PR", "Государственная программа развития коммуникаций СССР", "Решения международных организаций о развитии PR в России"]}, {"num": 92, "topic": "История PR", "q": "Что НЕ использовалось в Российской империи накануне Первой мировой войны?", "correct": "Массовые PR-кампании с использованием радио и телевидения; профессиональные PR-агентства западного типа; системный политический PR в современном понимании", "distractors": ["Печатная реклама в газетах и журналах", "Выставочная деятельность как инструмент продвижения", "Спонсорство и благотворительность как PR"]}, {"num": 93, "topic": "История PR", "q": "Что в СССР в годы НЭПа обозначал термин «реклам-конструктор»?", "correct": "Творческий метод или специалистов, работавших в стиле конструктивизма над рекламными материалами (агентство Маяковского и Родченко)", "distractors": ["Конструктор рекламных модулей в типографии", "Чиновника, утверждающего рекламные плакаты", "Прибор для измерения эффективности рекламы"]}, {"num": 94, "topic": "История PR", "q": "Кто из советских государственных деятелей в 1930-е гг. оказал значительное влияние на развитие пищевой промышленности и её рекламы?", "correct": "Анастас Микоян", "distractors": ["Лазарь Каганович", "Вячеслав Молотов", "Серго Орджоникидзе"]}, {"num": 95, "topic": "История PR", "q": "Какую цель имели рекламные кампании банка «Империал» в России в 1990-е годы?", "correct": "Повышение узнаваемости бренда, формирование имиджа надёжного и престижного банка, а также привлечение новых клиентов", "distractors": ["Только привлечение молодёжной аудитории", "Снижение себестоимости банковских услуг", "Создание имиджа недорогого банка для пенсионеров"]}, {"num": 96, "topic": "PR: основы", "q": "Кто первый ввёл в оборот термин «паблик рилейшнз»?", "correct": "Третий президент США Томас Джефферсон в 1807 году (в черновике своего «Седьмого обращения к конгрессу»)", "distractors": ["Эдвард Бернейс", "Айви Ли", "Гарольд Лассуэлл"]}, {"num": 97, "topic": "Политические коммуникации", "q": "Что НЕ относится к принципам политического пиара в органах государственной власти?", "correct": "Манипуляция, закрытость, искажение информации и служение интересам отдельных чиновников и политических партий", "distractors": ["Открытость и прозрачность (гласность)", "Приоритет общественного интереса", "Двусторонний диалог"]}, {"num": 98, "topic": "Политические коммуникации", "q": "Политическая коммуникация — это…", "correct": "Процесс передачи политической информации, идей, ценностей и решений между различными субъектами политической деятельности (государством, партиями, институтами гражданского общества, лидерами, гражданами)", "distractors": ["Только официальные пресс-релизы правительства", "Только теледебаты во время выборов", "Только частные разговоры политиков"]}, {"num": 99, "topic": "Политические коммуникации", "q": "Какие элементы включает в себя имидж политического деятеля?", "correct": "Внешний (визуальный) образ, речь и коммуникация, поведение, ценности и убеждения, репутация и биография, образ в СМИ", "distractors": ["Только марка часов и автомобиля политика", "Только финансовые показатели его деклараций", "Только результаты последних социологических опросов"]}, {"num": 100, "topic": "Политические коммуникации", "q": "Каковы цели политической коммуникации?", "correct": "Целенаправленное воздействие на определённую аудиторию (граждан, электорат) с целью формирования определённого общественного мнения, обеспечения поддержки власти и влияния на политический процесс", "distractors": ["Только информирование граждан о новостях без воздействия", "Только академическое изучение политических процессов", "Только сбор статистических данных без обратной связи"]}, {"num": 101, "topic": "PR: основы", "q": "Каковы основные принципы (этапы) построения пиар-кампаний?", "correct": "Определение задач и целей, определение аудитории, выбор основной темы кампании, выбор каналов распространения, планирование бюджета", "distractors": ["Только размещение публикаций в СМИ", "Только проведение фокус-групп", "Только разработка фирменного стиля"]}, {"num": 102, "topic": "Контент и тексты", "q": "Что такое PR-тексты для СМИ?", "correct": "Материалы, которые создаются пресс-службами и PR-специалистами для передачи журналистам и редакциям; их задача — информирование общественности, формирование имиджа, поддержание репутации", "distractors": ["Рекламные объявления, оплачиваемые по тарифам СМИ", "Внутренняя документация редакций", "Финансовые отчёты компаний для инвесторов"]}, {"num": 103, "topic": "Политические коммуникации", "q": "Что такое политические коммуникации?", "correct": "Процесс передачи политической информации между субъектами политической деятельности для формирования общественного мнения и обеспечения участия граждан в политическом процессе", "distractors": ["Только дипломатические переговоры между государствами", "Только военная коммуникация в условиях конфликта", "Только парламентские прения"]}, {"num": 104, "topic": "Бренд / Репутация / Имидж", "q": "Каково соотношение имиджа и медиаобраза?", "correct": "Медиаобраз — отражение имиджа в СМИ, но не весь имидж; имидж формируется из разных источников (личный опыт, слухи, реклама, соцсети), а медиаобраз — только через СМИ", "distractors": ["Это полностью тождественные понятия", "Медиаобраз шире имиджа и включает его", "Имидж формируется только через медиаобраз"]}, {"num": 105, "topic": "Digital и SMM", "q": "SMM (Social Media Marketing) — это…", "correct": "Самостоятельное направление интернет-маркетинга, охватывающее полный спектр целей и задач в сфере продвижения в социальных медиа", "distractors": ["Размещение наружной рекламы на билбордах", "Прямые продажи по телефону потенциальным клиентам", "Печатная рассылка каталогов товаров"]}, {"num": 106, "topic": "Digital и SMM", "q": "ORM (Online Reputation Management) — это…", "correct": "Комплекс стратегий и мероприятий, направленных на формирование и поддержку положительного образа компании или бренда в сети", "distractors": ["Только удаление всех негативных отзывов", "Оптимизация сайта для поисковых систем", "Платная контекстная реклама в поиске"]}, {"num": 107, "topic": "Digital и SMM", "q": "OOH (Out Of Home) — это…", "correct": "Сокращение от «out-of-home» (вне дома), визуальная форма рекламы, которая привлекает внимание потребителей, когда они находятся вне дома и вдали от своих устройств", "distractors": ["Реклама в социальных сетях для домашних пользователей", "Email-рассылка по базам данных", "Прямой маркетинг через колл-центры"]}, {"num": 108, "topic": "Контент и тексты", "q": "Каково соотношение нарратива и сторителлинга?", "correct": "Нарратив — структура повествования (каркас, концепция); сторителлинг — процесс передачи истории, искусство и техника её рассказа", "distractors": ["Это полностью идентичные понятия — синонимы", "Нарратив используется только в художественной литературе, сторителлинг — только в рекламе", "Сторителлинг шире нарратива и включает его"]}, {"num": 109, "topic": "Правовые основы", "q": "Реклама каких товаров НЕ допускается законом 38-ФЗ «О рекламе»?", "correct": "Наркотических средств и психотропных веществ, взрывчатых веществ, органов человека, табака, услуг по прерыванию беременности, цифровой валюты, информационных ресурсов иностранных агентов", "distractors": ["Автомобилей и бытовой техники", "Продуктов питания и одежды", "Образовательных услуг"]}, {"num": 110, "topic": "Внутренние коммуникации", "q": "Что такое внутрикорпоративный пиар?", "correct": "Система коммуникаций внутри организации, направленная на формирование благоприятного психологического климата, укрепление корпоративной культуры и поддержание эффективного взаимодействия между руководством и сотрудниками", "distractors": ["Внешняя реклама компании на рынке труда", "Финансовый аудит подразделений компании", "Только организация корпоративов и праздников"]}, {"num": 111, "topic": "Правовые основы", "q": "Каковы правовые основы связей с общественностью в России?", "correct": "Конституция РФ (ст. 29), ФЗ «О рекламе» № 38-ФЗ, Закон «О СМИ», законы о государственной, служебной и коммерческой тайне, законодательство об авторском праве", "distractors": ["Только Гражданский кодекс РФ", "Только международные конвенции ООН", "Специального закона о PR в России не существует, поэтому регулирования нет"]}, {"num": 112, "topic": "Прочее", "q": "Что означает термин «фандрайзинговая деятельность»?", "correct": "Деятельность по привлечению финансовых и иных ресурсов (деньги, товары, услуги, время людей) для реализации социальных, культурных, благотворительных или общественно значимых проектов", "distractors": ["Финансовый аудит коммерческой организации", "Управление инвестиционным портфелем", "Биржевая торговля ценными бумагами"]}, {"num": 113, "topic": "PR: основы", "q": "С какой целью проводится пресс-конференция?", "correct": "Чтобы получить официальный комментарий из первых уст и распространить конкретную информацию по СМИ — это форма коллективного интервью", "distractors": ["Чтобы продать товары представителям прессы", "Чтобы развлечь журналистов в неформальной обстановке", "Чтобы провести закрытое совещание руководителей"]}, {"num": 114, "topic": "Прочее", "q": "Что относится к константам фирменного / корпоративного стиля?", "correct": "Товарный знак, логотип, слоган, фирменные цвета, шрифт, маскот, гайдлайн (брендбук)", "distractors": ["Только логотип компании", "Финансовая отчётность и баланс", "Только название юридического лица"]}, {"num": 115, "topic": "Маркетинг и реклама", "q": "Какая реклама должна использоваться на стадии насыщения рынка товаром фирмы?", "correct": "Напоминающая (поддерживающая) реклама, а также имиджевая реклама", "distractors": ["Информативная реклама для нового продукта", "Убеждающая реклама на стадии роста", "Подкрепляющая реклама после покупки"]}, {"num": 116, "topic": "Маркетинг и реклама", "q": "Рекламная кампания — это…", "correct": "Комплекс (система) взаимосвязанных рекламных мероприятий, объединённых общей целью, концепцией и идеей, реализуемых в течение определённого периода времени с использованием различных средств рекламы", "distractors": ["Однократное размещение рекламного объявления", "Только бюджет на рекламу в годовом плане", "Только список каналов размещения"]}, {"num": 117, "topic": "Правовые основы", "q": "Какая ответственность предусмотрена за нарушение положений 38-ФЗ «О рекламе»?", "correct": "Гражданско-правовая ответственность, административная ответственность, а также иные меры ответственности, установленные федеральными законами за умышленное нарушение", "distractors": ["Только уголовная ответственность за все нарушения", "Только дисциплинарная ответственность для сотрудников", "Только моральное порицание со стороны общественности"]}, {"num": 118, "topic": "Digital и SMM", "q": "SERM (Search Engine Reputation Management) — это…", "correct": "Управление репутацией бренда или компании в поисковых системах; цель — сформировать положительный имидж, контролировать и улучшать поисковую выдачу, минимизировать влияние негативной информации", "distractors": ["Управление внутренней репутацией среди сотрудников", "Оплата размещения рекламы в поиске", "Управление техническими параметрами сайта"]}, {"num": 119, "topic": "Digital и SMM", "q": "SEO (Search Engine Optimization) — это…", "correct": "Комплекс методов и мероприятий по оптимизации сайта для повышения его позиций в результатах выдачи поисковых систем по релевантным запросам с целью увеличения органического трафика", "distractors": ["Платная контекстная реклама в поисковых системах", "Управление репутацией в социальных сетях", "Email-рассылка по подписчикам"]}, {"num": 120, "topic": "Общественное мнение", "q": "Общественное мнение — это…", "correct": "Состояние массового сознания, отражающее скрытое или явное отношение людей к бренду, товару или организации (с точки зрения рекламы и PR)", "distractors": ["Только результаты социологических опросов", "Только официальное мнение государственных СМИ", "Только публикации в социальных сетях"]}];
+
+// ===== СОСТОЯНИЕ =====
+const state = {
+  mode: 'all',
+  selectedTopics: new Set(),
+  shuffleQ: true,
+  shuffleO: true,
+  showExpl: true,
+  pool: [],
+  idx: 0,
+  answers: [],
+  startTime: null
+};
+
+function $(id) { return document.getElementById(id); }
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ===== ИНИЦИАЛИЗАЦИЯ ТЕМ =====
+function initTopics() {
+  const counts = {};
+  QUESTIONS.forEach(q => counts[q.topic] = (counts[q.topic] || 0) + 1);
+  const wrap = $('topics');
+  wrap.innerHTML = '';
+  Object.keys(counts).sort().forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'chip';
+    btn.dataset.topic = t;
+    btn.innerHTML = `${t}<span class="chip-count">${counts[t]}</span>`;
+    btn.onclick = () => {
+      if (state.selectedTopics.has(t)) {
+        state.selectedTopics.delete(t);
+        btn.classList.remove('selected');
+      } else {
+        state.selectedTopics.add(t);
+        btn.classList.add('selected');
+      }
+      updateCount();
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+function updateCount() {
+  let c = 0;
+  if (state.mode === 'all') c = QUESTIONS.length;
+  else if (state.mode === 'short') c = Math.min(30, QUESTIONS.length);
+  else if (state.mode === 'mini') c = Math.min(15, QUESTIONS.length);
+  else if (state.mode === 'topic')
+    c = QUESTIONS.filter(q => state.selectedTopics.has(q.topic)).length;
+  $('count-info').textContent = c > 0 ? `Будет ${c} вопрос${c === 1 ? '' : (c < 5 ? 'а' : 'ов')}` : 'Выберите хотя бы одну тему';
+  $('start-btn').disabled = c === 0;
+}
+
+// ===== ВЫБОР РЕЖИМА =====
+document.querySelectorAll('.mode-tile').forEach(tile => {
+  tile.onclick = () => {
+    document.querySelectorAll('.mode-tile').forEach(t => t.classList.remove('selected'));
+    tile.classList.add('selected');
+    state.mode = tile.dataset.mode;
+    $('topics-block').style.display = state.mode === 'topic' ? 'block' : 'none';
+    updateCount();
+  };
+});
+
+$('select-all-topics').onclick = () => {
+  const all = QUESTIONS.reduce((acc, q) => (acc[q.topic] = 1, acc), {});
+  const allSelected = state.selectedTopics.size === Object.keys(all).length;
+  document.querySelectorAll('.chip').forEach(c => {
+    if (allSelected) {
+      state.selectedTopics.delete(c.dataset.topic);
+      c.classList.remove('selected');
+    } else {
+      state.selectedTopics.add(c.dataset.topic);
+      c.classList.add('selected');
+    }
+  });
+  $('select-all-topics').textContent = allSelected ? 'Выбрать все' : 'Снять все';
+  updateCount();
+};
+
+// ===== ТОГГЛЫ =====
+function bindToggle(id, key) {
+  $(id).onclick = () => {
+    state[key] = !state[key];
+    $(id).classList.toggle('on', state[key]);
+  };
+}
+bindToggle('t-shuffle-q', 'shuffleQ');
+bindToggle('t-shuffle-o', 'shuffleO');
+bindToggle('t-explain', 'showExpl');
+
+// ===== СТАРТ =====
+$('start-btn').onclick = () => {
+  let pool = QUESTIONS.slice();
+  if (state.mode === 'topic') pool = pool.filter(q => state.selectedTopics.has(q.topic));
+  if (state.shuffleQ) pool = shuffle(pool);
+  if (state.mode === 'short') pool = pool.slice(0, 30);
+  if (state.mode === 'mini') pool = pool.slice(0, 15);
+
+  state.pool = pool.map(q => {
+    // Собираем варианты: correct + distractors
+    const allOpts = [q.correct, ...q.distractors];
+    const order = allOpts.map((_, i) => i);
+    const shuf = state.shuffleO ? shuffle(order) : order;
+    return {
+      ...q,
+      displayOpts: shuf.map(i => allOpts[i]),
+      correctIdx: shuf.indexOf(0) // 0 — индекс correct в allOpts
+    };
+  });
+
+  state.idx = 0;
+  state.answers = [];
+  state.startTime = Date.now();
+  showQuestion();
+  showScreen('quiz-screen');
+};
+
+// ===== ПОКАЗ ВОПРОСА =====
+function showQuestion() {
+  const q = state.pool[state.idx];
+  const total = state.pool.length;
+  $('progress-fill').style.width = (state.idx / total * 100) + '%';
+  $('progress-text').textContent = `Вопрос ${state.idx + 1} из ${total}`;
+  $('topic-pill').textContent = q.topic;
+  $('question-text').textContent = q.q;
+
+  const wrap = $('options');
+  wrap.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D', 'E'];
+  q.displayOpts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `
+      <span class="option-letter">${letters[i]}</span>
+      <span class="option-text"></span>
+    `;
+    btn.querySelector('.option-text').textContent = opt;
+    btn.onclick = () => selectAnswer(i);
+    wrap.appendChild(btn);
+  });
+
+  $('explanation').classList.remove('show', 'correct', 'incorrect');
+  $('next-btn').disabled = true;
+  $('next-btn').textContent = state.idx === total - 1 ? 'Завершить →' : 'Далее →';
+}
+
+// ===== ВЫБОР ОТВЕТА =====
+function selectAnswer(chosenIdx) {
+  const q = state.pool[state.idx];
+  const isCorrect = chosenIdx === q.correctIdx;
+  state.answers.push({ poolIdx: state.idx, chosenIdx, isCorrect });
+
+  const optEls = document.querySelectorAll('.option');
+  optEls.forEach((el, i) => {
+    el.disabled = true;
+    if (i === q.correctIdx) el.classList.add('correct');
+    else if (i === chosenIdx) el.classList.add('incorrect');
+    else el.classList.add('dimmed');
+  });
+
+  if (state.showExpl) {
+    const expl = $('explanation');
+    expl.classList.add('show');
+    expl.classList.add(isCorrect ? 'correct' : 'incorrect');
+    $('explanation-label').textContent = isCorrect ? '✓ Верно' : '✗ Не совсем';
+    $('explanation-text').textContent = isCorrect
+      ? 'Это правильный ответ.'
+      : `Правильный ответ: ${q.correct}`;
+  }
+
+  $('next-btn').disabled = false;
+  // Прокрутка к кнопке "Далее" на мобильных
+  setTimeout(() => $('next-btn').scrollIntoView({ behavior: 'smooth', block: 'end' }), 100);
+}
+
+// ===== НАВИГАЦИЯ =====
+$('next-btn').onclick = () => {
+  if (state.idx < state.pool.length - 1) {
+    state.idx++;
+    showQuestion();
+  } else {
+    showResults();
+  }
+};
+
+$('exit-btn').onclick = () => {
+  if (state.answers.length === 0 || confirm('Завершить тест досрочно?')) {
+    showResults();
+  }
+};
+
+// ===== РЕЗУЛЬТАТЫ =====
+function showResults() {
+  const correct = state.answers.filter(a => a.isCorrect).length;
+  const total = state.answers.length;
+  const pct = total === 0 ? 0 : Math.round(correct / total * 100);
+  const sec = Math.round((Date.now() - state.startTime) / 1000);
+  const mm = Math.floor(sec / 60);
+  const ss = String(sec % 60).padStart(2, '0');
+
+  $('score-percent').textContent = pct + '%';
+  $('score-fraction').textContent = `${correct} / ${total}`;
+  $('stat-correct').textContent = correct;
+  $('stat-wrong').textContent = total - correct;
+  $('stat-total').textContent = total;
+  $('stat-time').textContent = `${mm}:${ss}`;
+
+  const circle = $('score-circle');
+  circle.className = 'score-circle';
+  let msg;
+  if (pct >= 90) { circle.classList.add('excellent'); msg = 'Отлично! Готовы к ГИА 🎓'; }
+  else if (pct >= 75) { circle.classList.add('good'); msg = 'Хорошо! Закрепите слабые темы'; }
+  else if (pct >= 60) { circle.classList.add('average'); msg = 'Неплохо, есть над чем поработать'; }
+  else { circle.classList.add('poor'); msg = 'Нужно повторить материал'; }
+  $('score-msg').textContent = msg;
+
+  $('review-section').style.display = 'none';
+  $('review-btn').textContent = 'Разбор';
+  buildReview();
+  showScreen('results-screen');
+}
+
+function buildReview() {
+  const wrong = $('wrong-list');
+  const corr = $('correct-list');
+  wrong.innerHTML = '';
+  corr.innerHTML = '';
+  let wc = 0, cc = 0;
+
+  state.answers.forEach(ans => {
+    const q = state.pool[ans.poolIdx];
+    const chosen = q.displayOpts[ans.chosenIdx];
+    const div = document.createElement('div');
+    div.className = 'review-item' + (ans.isCorrect ? ' correct' : '');
+
+    let ansHtml;
+    if (ans.isCorrect) {
+      ansHtml = `<div class="review-ans"><span class="right-text">✓ ${escapeHtml(q.correct)}</span></div>`;
+    } else {
+      ansHtml = `<div class="review-ans">
+        <span class="wrong-text">✗ Ваш: ${escapeHtml(chosen)}</span>
+        <span class="right-text">✓ Верно: ${escapeHtml(q.correct)}</span>
+      </div>`;
+    }
+
+    div.innerHTML = `
+      <div class="review-meta">№${q.num} · ${escapeHtml(q.topic)}</div>
+      <div class="review-q">${escapeHtml(q.q)}</div>
+      ${ansHtml}
+    `;
+
+    if (ans.isCorrect) { corr.appendChild(div); cc++; }
+    else { wrong.appendChild(div); wc++; }
+  });
+
+  $('wrong-title').textContent = wc > 0 ? `Ошибки (${wc})` : '';
+  $('wrong-title').style.display = wc > 0 ? '' : 'none';
+  $('correct-title').textContent = cc > 0 ? `Правильные (${cc})` : '';
+  $('correct-title').style.display = cc > 0 ? '' : 'none';
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+$('review-btn').onclick = () => {
+  const rs = $('review-section');
+  const isHidden = rs.style.display === 'none';
+  rs.style.display = isHidden ? 'block' : 'none';
+  $('review-btn').textContent = isHidden ? 'Скрыть' : 'Разбор';
+  if (isHidden) {
+    setTimeout(() => rs.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  }
+};
+
+$('retry-btn').onclick = () => $('start-btn').click();
+$('home-btn').onclick = () => showScreen('start-screen');
+
+// ===== ИНИЦИАЛИЗАЦИЯ =====
+initTopics();
+updateCount();
+</script>
+</body>
+</html>

@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тренажёр ГИА 2026 — PR, реклама, коммуникации</title>
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --surface: #ffffff;
+    --surface-2: #faf9f7;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --text-soft: #9a9a9a;
+    --border: #e4e2dc;
+    --border-strong: #c9c6bd;
+    --primary: #2d5d9f;
+    --primary-bg: #e8f0fa;
+    --primary-dark: #1e4477;
+    --success: #2d7a4e;
+    --success-bg: #e6f3eb;
+    --danger: #b03b3b;
+    --danger-bg: #fbecec;
+    --warning: #a96a18;
+    --warning-bg: #fbf2e2;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "PT Sans", sans-serif;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+
+  header.main-header {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  h2 {
+    margin: 0 0 16px;
+    font-size: 19px;
+    font-weight: 600;
+  }
+
+  h3 {
+    margin: 18px 0 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* START SCREEN */
+  .mode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 16px 0 8px;
+  }
+
+  .mode-card {
+    background: var(--surface-2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+  }
+
+  .mode-card:hover {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+    transform: translateY(-1px);
+  }
+
+  .mode-card.selected {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+  }
+
+  .mode-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .mode-card-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .topic-chip {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s ease;
+    text-align: center;
+    font: inherit;
+    color: inherit;
+  }
+
+  .topic-chip:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .topic-chip.selected {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  .topic-chip .count {
+    opacity: 0.7;
+    font-size: 11px;
+    margin-left: 4px;
+  }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 22px;
+    border-radius: var(--radius);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  .btn-primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+  }
+
+  .btn-primary:disabled {
+    background: var(--border-strong);
+    border-color: var(--border-strong);
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+
+  .btn-secondary:hover {
+    background: var(--surface-2);
+    border-color: var(--text);
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+
+  /* QUIZ SCREEN */
+  .progress-bar {
+    background: var(--border);
+    height: 6px;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .progress-fill {
+    background: var(--primary);
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  .quiz-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .topic-tag {
+    display: inline-block;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .question-text {
+    font-size: 17px;
+    line-height: 1.5;
+    margin: 6px 0 22px;
+    font-weight: 500;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    width: 100%;
+  }
+
+  .option:hover:not(:disabled) {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+  }
+
+  .option:disabled {
+    cursor: default;
+  }
+
+  .option-letter {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: all 0.15s ease;
+  }
+
+  .option-text {
+    flex: 1;
+    line-height: 1.5;
+    padding-top: 2px;
+  }
+
+  .option.correct {
+    border-color: var(--success);
+    background: var(--success-bg);
+  }
+
+  .option.correct .option-letter {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+  }
+
+  .option.incorrect {
+    border-color: var(--danger);
+    background: var(--danger-bg);
+  }
+
+  .option.incorrect .option-letter {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+  }
+
+  .option.dimmed {
+    opacity: 0.5;
+  }
+
+  /* EXPLANATION */
+  .explanation {
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: var(--primary-bg);
+    border-left: 3px solid var(--primary);
+    border-radius: var(--radius);
+    font-size: 14px;
+    line-height: 1.6;
+    display: none;
+  }
+
+  .explanation.show {
+    display: block;
+  }
+
+  .explanation-label {
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 22px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* RESULTS SCREEN */
+  .score-display {
+    text-align: center;
+    padding: 24px 0;
+  }
+
+  .score-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--primary-bg);
+    color: var(--primary-dark);
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .score-circle.excellent { background: var(--success-bg); color: var(--success); }
+  .score-circle.good { background: var(--primary-bg); color: var(--primary-dark); }
+  .score-circle.average { background: var(--warning-bg); color: var(--warning); }
+  .score-circle.poor { background: var(--danger-bg); color: var(--danger); }
+
+  .score-percent {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .score-fraction {
+    font-size: 13px;
+    margin-top: 4px;
+    opacity: 0.85;
+  }
+
+  .score-message {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 4px 0 16px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .stat-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .review-section {
+    margin-top: 20px;
+  }
+
+  .review-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--danger);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+
+  .review-item.correct {
+    border-left-color: var(--success);
+  }
+
+  .review-item-q {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .review-item-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .review-item-ans {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .review-item-ans .wrong {
+    color: var(--danger);
+    text-decoration: line-through;
+  }
+
+  .review-item-ans .right {
+    color: var(--success);
+    font-weight: 500;
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .toggle-switch {
+    position: relative;
+    width: 38px;
+    height: 22px;
+    background: var(--border-strong);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border: none;
+    padding: 0;
+  }
+
+  .toggle-switch.on {
+    background: var(--primary);
+  }
+
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+  }
+
+  .toggle-switch.on::after {
+    transform: translateX(16px);
+  }
+
+  .hint {
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 16px 14px 60px; }
+    .card { padding: 18px 16px; }
+    h1 { font-size: 22px; }
+    .question-text { font-size: 16px; }
+    .score-circle { width: 110px; height: 110px; }
+    .score-percent { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="main-header">
+    <h1>Тренажёр ГИА 2026</h1>
+    <p class="subtitle">PR, реклама, маркетинг, медиа и коммуникации · 88 вопросов · 15 тем</p>
+  </header>
+
+  <!-- START SCREEN -->
+  <div id="start-screen" class="screen active">
+    <div class="card">
+      <h2>Режим тестирования</h2>
+      <div class="mode-grid">
+        <button class="mode-card selected" data-mode="all">
+          <div class="mode-card-title">Полный тест</div>
+          <div class="mode-card-desc">Все 88 вопросов из всех тем</div>
+        </button>
+        <button class="mode-card" data-mode="topic">
+          <div class="mode-card-title">По темам</div>
+          <div class="mode-card-desc">Выберите интересующие темы</div>
+        </button>
+        <button class="mode-card" data-mode="short">
+          <div class="mode-card-title">Короткий тест</div>
+          <div class="mode-card-desc">20 случайных вопросов</div>
+        </button>
+        <button class="mode-card" data-mode="mini">
+          <div class="mode-card-title">Мини-тест</div>
+          <div class="mode-card-desc">10 случайных вопросов</div>
+        </button>
+      </div>
+
+      <div id="topics-block" style="display:none; margin-top: 20px;">
+        <h3>Выберите темы</h3>
+        <div class="topic-grid" id="topic-grid"></div>
+        <button class="btn btn-secondary" id="select-all-topics" style="margin-top: 10px; padding: 8px 14px; font-size: 13px;">Выбрать все</button>
+      </div>
+
+      <h3 style="margin-top: 24px;">Настройки</h3>
+      <div class="toggle-row">
+        <button class="toggle-switch on" id="shuffle-q-toggle" aria-label="Перемешивать вопросы"></button>
+        <span>Перемешивать порядок вопросов</span>
+      </div>
+      <div class="toggle-row">
+        <button class="toggle-switch on" id="shuffle-o-toggle" aria-label="Перемешивать варианты"></button>
+        <span>Перемешивать варианты ответов</span>
+      </div>
+      <div class="toggle-row">
+        <button class="toggle-switch on" id="explain-toggle" aria-label="Показывать объяснения"></button>
+        <span>Показывать объяснения сразу после ответа</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" id="start-btn">Начать тест →</button>
+        <span id="question-count-info" class="hint" style="margin-top: 0;"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Как пользоваться</h2>
+      <p style="margin: 0 0 8px; font-size: 14px; color: var(--text-muted);">
+        Этот тренажёр построен на основе 120 вопросов к ГИА 2026 по дисциплинам, связанным с PR, маркетингом, рекламой и коммуникациями.
+      </p>
+      <p style="margin: 0 0 8px; font-size: 14px; color: var(--text-muted);">
+        Все вопросы и пояснения опираются на содержание учебных материалов, ФЗ-38 «О рекламе» и работы классиков (Лассуэлл, Маклюэн, Липпман, Ноэль-Нойман, Маккуэйл, Бернейс, Котлер, Левитт и др.).
+      </p>
+      <p style="margin: 0; font-size: 13px; color: var(--text-soft);">
+        Совет: сначала пройдите полный тест, выявите слабые темы, затем доучите их в отдельных «тематических» прогонах.
+      </p>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen" class="screen">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="card">
+      <div class="quiz-meta">
+        <span id="progress-text">Вопрос 1 из 88</span>
+        <span class="topic-tag" id="topic-tag">Тема</span>
+      </div>
+      <div class="question-text" id="question-text"></div>
+      <div class="options" id="options"></div>
+
+      <div class="explanation" id="explanation">
+        <div class="explanation-label" id="explanation-label">Пояснение</div>
+        <div id="explanation-text"></div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" id="exit-btn">← Завершить</button>
+        <button class="btn btn-primary" id="next-btn" disabled>Далее →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen" class="screen">
+    <div class="card">
+      <div class="score-display">
+        <div class="score-circle" id="score-circle">
+          <div class="score-percent" id="score-percent">0%</div>
+          <div class="score-fraction" id="score-fraction">0 / 0</div>
+        </div>
+        <div class="score-message" id="score-message"></div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="stat-correct" style="color: var(--success);">0</div>
+          <div class="stat-label">Верных</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="stat-wrong" style="color: var(--danger);">0</div>
+          <div class="stat-label">Неверных</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-label">Всего</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="stat-time">0 мин</div>
+          <div class="stat-label">Время</div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" id="retry-btn">Пройти ещё раз</button>
+        <button class="btn btn-secondary" id="home-btn">К настройкам</button>
+        <button class="btn btn-secondary" id="review-btn">Разбор ответов ↓</button>
+      </div>
+    </div>
+
+    <div class="card" id="review-card" style="display: none;">
+      <h2>Разбор ответов</h2>
+      <h3 id="wrong-section-title" style="color: var(--danger);">Ошибки</h3>
+      <div id="wrong-list"></div>
+      <h3 id="correct-section-title" style="margin-top: 24px;">Правильные ответы</h3>
+      <div id="correct-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// === ДАННЫЕ ВОПРОСОВ ===
+const QUESTIONS = [{"topic": "Теории коммуникации", "q": "Кто является автором классического определения пропаганды как «менеджмента коллективных мнений с помощью манипуляций значимыми символами»?", "options": ["Эдвард Бернейс", "Гарольд Лассуэлл", "Уолтер Липпман", "Маршалл Маклюэн"], "answer": 1, "explain": "Г. Лассуэлл — американский политолог, основоположник политологии и автор работы «Техника пропаганды во время мировой войны» (1927)."}, {"topic": "Теории коммуникации", "q": "Какие две составляющие пропаганды выделял Г. Лассуэлл?", "options": ["Эмоция и логика", "Креденды и миранды", "Факты и мифы", "Лозунги и доктрины"], "answer": 1, "explain": "Креденды — рациональная (доверие к доктринам, законам), миранды — эмоциональная (ритуалы, символы, образы лидеров)."}, {"topic": "Теории коммуникации", "q": "В классической модели коммуникации Г. Лассуэлла НЕ выделяется элемент:", "options": ["Отправитель (кто говорит?)", "Канал (по какому каналу?)", "Шум/помехи", "Эффект (с каким результатом?)"], "answer": 2, "explain": "Модель Лассуэлла: «Кто? — Что? — По какому каналу? — Кому? — С каким эффектом?». Шум — элемент модели Шеннона–Уивера."}, {"topic": "Теории коммуникации", "q": "Кому принадлежит формула «The medium is the message» («Медиа — это сообщение»)?", "options": ["Г. Лассуэлл", "У. Липпман", "М. Маклюэн", "Э. Ноэль-Нойман"], "answer": 2, "explain": "Канадский теоретик коммуникации Маршалл Маклюэн ввёл эту формулу в книге «Понимание медиа» (1964)."}, {"topic": "Теории коммуникации", "q": "Согласно теории Уолтера Липпмана существует расхождение между…", "options": ["Реальным миром и «псевдосредой» в сознании людей", "Властью и народом", "СМИ и пропагандой", "Мифом и реальностью истории"], "answer": 0, "explain": "Липпман в книге «Общественное мнение» (1922) утверждал, что люди действуют не в реальности, а в «псевдосреде» — упрощённой картине мира, созданной СМИ и стереотипами."}, {"topic": "Теории коммуникации", "q": "Кому принадлежит концепция «спирали молчания»?", "options": ["Дениса Маккуэйла", "Элизабет Ноэль-Нойман", "Уолтера Липпмана", "Пола Лазарсфельда"], "answer": 1, "explain": "Немецкий социолог Э. Ноэль-Нойман: человек реже высказывает мнение, если считает его непопулярным, усиливая доминирующую позицию."}, {"topic": "Теории коммуникации", "q": "Согласно теории ограниченных эффектов (П. Лазарсфельд) влияние СМИ НЕ зависит от…", "options": ["Лидеров мнений", "Социального контекста и установок аудитории", "Содержания самих медиа в отрыве от социальных факторов", "Межличностных отношений"], "answer": 2, "explain": "Теория ограниченных эффектов утверждает: СМИ не обладают независимым прямым эффектом — он опосредован лидерами мнений, социальным окружением и установками аудитории."}, {"topic": "Теории коммуникации", "q": "Какую роль играют медиа согласно теории диффузии инноваций Э. Роджерса?", "options": ["Принимают решения за пользователей", "Источник первичной осведомлённости на ранних стадиях принятия инновации", "Заменяют межличностное общение", "Препятствуют распространению новых идей"], "answer": 1, "explain": "Медиа эффективны на этапах awareness — сообщают о существовании инновации, особенно для ранних последователей (early adopters)."}, {"topic": "Теории коммуникации", "q": "Что НЕ характерно для либертарианской модели прессы (по Сиберту, Питерсону, Шрамму)?", "options": ["Свобода слова и печати", "Частная собственность на СМИ", "Государственный контроль и цензура", "Свободная конкуренция мнений"], "answer": 2, "explain": "Либертарианская модель противопоставлена авторитарной: государство НЕ должно контролировать СМИ; пресса свободна от вмешательства власти."}, {"topic": "Теории коммуникации", "q": "Что является основой нормативного подхода к медиа у Д. Маккуэйла?", "options": ["Описание того, как медиа работают фактически", "Описание того, как медиа должны работать в обществе", "Расчёт рейтингов СМИ", "Технические характеристики передачи сигнала"], "answer": 1, "explain": "Нормативные теории Маккуэйла отвечают на вопрос «как медиа должны работать», а не «как они работают фактически»."}, {"topic": "Теории коммуникации", "q": "В модели социальной ответственности роль прессы заключается в…", "options": ["Абсолютной свободе без обязательств", "Сочетании свободы СМИ и ответственности перед обществом", "Полном подчинении государству", "Получении максимальной прибыли"], "answer": 1, "explain": "Модель социальной ответственности (Сиберт, Шрамм, Питерсон) — развитие либертарианской: свобода уравновешена обязательствами по правдивости, точности, балансу."}, {"topic": "Технологии влияния", "q": "Технология, при которой СМИ диктуют не «что думать», а «о чём думать», называется…", "options": ["Прайминг", "Фрейминг", "Навязывание повестки дня (agenda-setting)", "Мейнстриминг"], "answer": 2, "explain": "Agenda-setting (навязывание повестки): отбор и частота упоминания тем формируют у аудитории представление об их важности."}, {"topic": "Технологии влияния", "q": "Создание «рамки» интерпретации одного и того же события — это:", "options": ["Фрейминг", "Прайминг", "Мейнстриминг", "Сторителлинг"], "answer": 0, "explain": "Фрейминг (framing) — смысловая упаковка информации, выбор аспектов реальности для подачи. Те же факты в разных рамках вызывают противоположные реакции."}, {"topic": "Технологии влияния", "q": "«Предварительная настройка» аудитории — активация ассоциаций перед суждением о чём-либо — это:", "options": ["Фрейминг", "Прайминг", "Спираль молчания", "Стереотипизация"], "answer": 1, "explain": "Прайминг — создание контекста-фильтра. Например, неделю показывают коррупцию в медицине, затем новость о новом министре — оценка идёт через эту призму."}, {"topic": "Технологии влияния", "q": "Мейнстриминг как технология манипуляции связан с теорией…", "options": ["Культивации Дж. Гербнера", "Ограниченных эффектов", "Диффузии инноваций", "Двухступенчатой коммуникации"], "answer": 0, "explain": "Мейнстриминг — сглаживание различий мнений у тех, кто потребляет много однотипного медиаконтента. Тесно связан с теорией культивации Гербнера."}, {"topic": "PR: основы", "q": "Главное отличие PR от пропаганды состоит в:", "options": ["Использовании СМИ", "Двусторонней коммуникации и опоре на достоверную информацию", "Большем бюджете", "Применении только в политике"], "answer": 1, "explain": "PR предполагает диалог и обратную связь, опирается на достоверную информацию. Пропаганда — односторонняя коммуникация, манипуляция."}, {"topic": "PR: основы", "q": "Кто первый ввёл в оборот термин «public relations»?", "options": ["Эдвард Бернейс", "Айви Ли", "Томас Джефферсон", "Дорман Итон"], "answer": 2, "explain": "Большинство исследователей считают, что термин впервые использовал Т. Джефферсон в 1807 г. в черновике обращения к Конгрессу. Э. Бернейс — «отец» индустрии PR, но не автор термина."}, {"topic": "PR: основы", "q": "Процесс планирования и реализации коммуникационных стратегий для достижения целей связей с общественностью — это…", "options": ["Реклама", "Маркетинг", "PR-деятельность (паблик рилейшнз)", "Брендинг"], "answer": 2, "explain": "PR-деятельность — управление коммуникациями между организацией и её целевой аудиторией с целью формирования позитивного имиджа, репутации и доверия."}, {"topic": "PR: основы", "q": "Направление PR, связанное с выстраиванием отношений со СМИ, называется:", "options": ["GR-коммуникации", "Медиарилейшнз (media relations)", "Внутрикорпоративный PR", "Антикризисный PR"], "answer": 1, "explain": "Медиарилейшнз — работа с журналистами и редакциями: пресс-релизы, инфоповоды, мониторинг публикаций."}, {"topic": "PR: основы", "q": "Что включает в себя цикл управления PR-кампаниями RACE?", "options": ["Reach, Action, Conversion, Engage", "Research, Action planning, Communication, Evaluation", "Resource, Analysis, Content, Effect", "Report, Audit, Create, Evaluate"], "answer": 1, "explain": "RACE: Research (исследование) → Action planning (планирование) → Communication (реализация) → Evaluation (оценка)."}, {"topic": "Антикризисный PR", "q": "Антикризисный PR — это вид деятельности, направленный на…", "options": ["Создание новых продуктов", "Минимизацию негативных последствий кризиса для репутации и сохранение доверия", "Только опровержение фейков", "Привлечение инвестиций в момент кризиса"], "answer": 1, "explain": "Цель антикризисного PR — быстрое реагирование на кризис, предотвращение утраты доверия, восстановление репутации."}, {"topic": "Антикризисный PR", "q": "Какой принцип НЕ является ключевым для антикризисного PR?", "options": ["Оперативность реакции (в первые сутки)", "Информационная открытость и честность", "Координация коммуникаций", "Замалчивание проблемы до завершения внутренних расследований"], "answer": 3, "explain": "Замалчивание создаёт информационный вакуум, который заполнят слухи. Принципы антикризисного PR — скорость, открытость, честность, координация."}, {"topic": "Антикризисный PR", "q": "Репутационный кризис с точки зрения антикризисного PR — это…", "options": ["Плановое снижение продаж", "Неожиданное событие, прерывающее нормальное функционирование организации и наносящее ущерб репутации", "Реструктуризация компании", "Запуск нового продукта"], "answer": 1, "explain": "Это «пожар», требующий мгновенной реакции для локализации негатива и сохранения доверия аудитории."}, {"topic": "Бренд / Репутация / Имидж", "q": "Какое из понятий описывает целенаправленно формируемый образ организации, проектируемый PR-инструментами?", "options": ["Репутация", "Имидж", "Бренд", "Слоган"], "answer": 1, "explain": "Имидж — заявленная (идеальная) позиция, проектируемый образ. Репутация — воспринятая, складывающаяся из реального опыта."}, {"topic": "Бренд / Репутация / Имидж", "q": "Чем репутация отличается от имиджа?", "options": ["Репутация — короткосрочна, имидж — долгосрочен", "Репутация складывается из реальных действий и фактов; имидж — целенаправленно проектируемый образ", "Это синонимы", "Репутация относится только к товарам, имидж — только к людям"], "answer": 1, "explain": "Имидж — то, каким организация хочет выглядеть. Репутация — устойчивое мнение, основанное на опыте взаимодействия."}, {"topic": "Бренд / Репутация / Имидж", "q": "Имидж присущ…", "options": ["Только тем, кто его целенаправленно формирует", "Любому публичному объекту независимо от того, формирует он его или нет", "Только людям", "Только коммерческим организациям"], "answer": 1, "explain": "Имидж присущ любому публичному объекту (человеку, компании, городу, государству) — даже без целенаправленной работы он формируется в сознании общественности."}, {"topic": "Бренд / Репутация / Имидж", "q": "Бренд, объединяющий товары разных продуктовых линий, называется:", "options": ["Зонтичный", "Премиальный", "Корпоративный", "Локальный"], "answer": 0, "explain": "Зонтичный бренд (umbrella brand) объединяет под одним именем товары разных линий или различающиеся по назначению."}, {"topic": "Бренд / Репутация / Имидж", "q": "Репозиционирование бренда чаще всего рассматривается в рамках…", "options": ["Сегментации", "Ребрендинга", "ATL-кампании", "Антикризисного PR"], "answer": 1, "explain": "Репозиционирование — один из ключевых аспектов ребрендинга (наряду с маркетинговым аудитом и рестайлингом)."}, {"topic": "Бренд / Репутация / Имидж", "q": "Коммуникативное качество бренда (обещание) основано на…", "options": ["Способности бренда поддерживать отношения с потребителями и предлагать особые выгоды", "Только функциональных характеристиках товара", "Только цене", "Известности логотипа"], "answer": 0, "explain": "Коммуникативное качество (обещание) — суммирует функциональное, индивидуальное и социальное качества бренда, предлагая особые выгоды потребителю."}, {"topic": "Маркетинг и реклама", "q": "Что НЕ относится к демографическим критериям сегментирования?", "options": ["Возраст", "Уровень дохода", "Образ жизни", "Пол"], "answer": 2, "explain": "Образ жизни, ценности, личностные качества — это психографические критерии. Демография: пол, возраст, доход, образование, семейное положение."}, {"topic": "Маркетинг и реклама", "q": "ATL-реклама предполагает…", "options": ["Прямое однонаправленное воздействие через массовые каналы (ТВ, радио, пресса, наружная реклама)", "Только цифровые каналы", "Только личные продажи", "Только PR-активности"], "answer": 0, "explain": "ATL (Above The Line) — массовые рекламные каналы с наибольшим охватом и наименьшей персонализацией: ТВ, радио, пресса, наружная реклама."}, {"topic": "Маркетинг и реклама", "q": "Жизненный цикл товара по Т. Левитту включает стадии:", "options": ["Только рост и спад", "Разработка → Внедрение → Рост → Зрелость → Спад", "Идея → Производство → Продажа", "Запуск → Стабилизация → Снятие с производства"], "answer": 1, "explain": "Классическая 5-стадийная модель ЖЦТ Теодора Левитта."}, {"topic": "Маркетинг и реклама", "q": "На стадии насыщения рынка в основном применяется…", "options": ["Информативная реклама", "Напоминающая (поддерживающая) и имиджевая реклама", "Стимулирующая реклама", "Прямой маркетинг"], "answer": 1, "explain": "На стадии насыщения цель — не дать покупателям забыть товар, удержать долю рынка, укреплять доверие к бренду."}, {"topic": "Маркетинг и реклама", "q": "Основная цель стимулирующей рекламы — это…", "options": ["Долгосрочное формирование имиджа", "Побуждение потребителя к покупке в ближайшее время", "Информирование о новом продукте", "Снижение конкуренции"], "answer": 1, "explain": "Стимулирующая реклама активизирует спрос: скидки, акции «2 по цене 1», промокоды, ограниченные предложения."}, {"topic": "Маркетинг и реклама", "q": "Рекламный текст по формуле AIDA проводит покупателя через стадии:", "options": ["Анализ → Идея → Действие → Анонс", "Attention → Interest → Desire → Action", "Aim → Identity → Demand → Achievement", "Awareness → Image → Demonstration → Acceptance"], "answer": 1, "explain": "AIDA: Attention (внимание) → Interest (интерес) → Desire (желание) → Action (действие). Классическая модель продающего копирайтинга."}, {"topic": "Маркетинг и реклама", "q": "Цикл управления PDCA расшифровывается как:", "options": ["Plan – Do – Check – Act", "Promote – Distribute – Control – Analyze", "Place – Deliver – Confirm – Adapt", "Product – Demand – Customer – Action"], "answer": 0, "explain": "Цикл Деминга PDCA: Планируй → Делай → Проверяй → Действуй. Управленческая модель непрерывного улучшения процессов."}, {"topic": "Маркетинг и реклама", "q": "Сегментация рынка — это…", "options": ["Снижение цен на товары", "Процесс разделения общего рынка на однородные группы потребителей со схожими характеристиками", "Реклама в нескольких каналах", "Объединение рынков разных стран"], "answer": 1, "explain": "Сегментация позволяет точно нацеливать продукт, цену, продвижение и каналы сбыта на конкретные группы потребителей."}, {"topic": "Маркетинг и реклама", "q": "Какие три типа рекламной кампании выделяют по объекту продвижения?", "options": ["Печатная, ТВ, цифровая", "Имиджевая, продуктовая, торговая", "Локальная, региональная, федеральная", "B2B, B2C, B2G"], "answer": 1, "explain": "Имиджевая (продвигает торговую марку), продуктовая (продукт/категория), торговая (конкретного продавца)."}, {"topic": "ИМК и стратегия", "q": "Использование в рамках единой стратегии всей системы коммуникативных инструментов — это…", "options": ["Реклама", "ATL-кампания", "Интегрированные маркетинговые коммуникации (ИМК)", "Партизанский маркетинг"], "answer": 2, "explain": "ИМК объединяют рекламу, PR, стимулирование сбыта, личные продажи и бренд-коммуникации в единую систему для синергетического эффекта."}, {"topic": "ИМК и стратегия", "q": "Что входит в комплекс ИМК?", "options": ["Только реклама и PR", "Реклама, PR, стимулирование сбыта, прямой маркетинг, личные продажи, цифровые коммуникации, брендинг, событийный маркетинг", "Только онлайн-инструменты", "Только событийный маркетинг"], "answer": 1, "explain": "Полный комплекс ИМК включает все основные коммуникационные инструменты, объединённые единой стратегией."}, {"topic": "ИМК и стратегия", "q": "Что НЕ относится к фундаментальным стратегиям PR?", "options": ["Сегментация аудитории", "Позиционирование бренда", "Создание нарратива бренда", "Манипуляция фактами"], "answer": 3, "explain": "Манипуляция противоречит этическим принципам PR (опора на достоверность). Сегментация, позиционирование, нарратив, интегрированные коммуникации — базовые стратегии."}, {"topic": "ИМК и стратегия", "q": "Короткая фраза, раскрывающая суть компании, продукта или персоны, — это…", "options": ["Логотип", "Слоган", "Маскот", "Бренд-стори"], "answer": 1, "explain": "Слоган — короткая фраза, отражающая главное сообщение бренда. Пример: «Just Do It» (Nike)."}, {"topic": "ИМК и стратегия", "q": "Подготовка любого мероприятия начинается с…", "options": ["Поиска площадки", "Определения цели и задач", "Найма подрядчиков", "Покупки реквизита"], "answer": 1, "explain": "Первый этап — формулировка цели («зачем?»). От неё зависит формат, аудитория, бюджет и сценарий."}, {"topic": "ИМК и стратегия", "q": "При подготовке коммуникационной кампании в первую очередь…", "options": ["Определяется бюджет", "Определяется целевая аудитория", "Запускается реклама", "Заключаются договоры со СМИ"], "answer": 1, "explain": "По Котлеру (Маркетинг менеджмент): первый из 8 этапов — определение целевой аудитории, далее цели, сообщение, каналы и т.д."}, {"topic": "Digital и SMM", "q": "SMM (Social Media Marketing) — это…", "options": ["Размещение наружной рекламы", "Самостоятельное направление интернет-маркетинга, охватывающее продвижение в социальных медиа", "Печатная рассылка", "Только таргетированная реклама"], "answer": 1, "explain": "SMM использует социальные медиа для продвижения бренда, создания и поддержания имиджа, повышения лояльности и привлечения новых сегментов."}, {"topic": "Digital и SMM", "q": "ORM (Online Reputation Management) — это…", "options": ["Только удаление негативных отзывов", "Комплекс мер по формированию и поддержанию положительного образа компании в сети", "Поисковая оптимизация сайта", "Платная реклама в поисковых системах"], "answer": 1, "explain": "ORM создаёт благоприятное впечатление, нейтрализует негатив, активно продвигает позитивные упоминания."}, {"topic": "Digital и SMM", "q": "Главное отличие SERM от ORM:", "options": ["SERM работает с офлайн-репутацией", "SERM сосредоточен исключительно на результатах поисковой выдачи; ORM работает с онлайн-репутацией в целом", "Это синонимы", "ORM дороже SERM"], "answer": 1, "explain": "SERM (Search Engine Reputation Management) — управление видимостью в поисковиках (Яндекс, Google). ORM шире — соцсети, форумы, СМИ, отзовики."}, {"topic": "Digital и SMM", "q": "SEO (Search Engine Optimization) — это…", "options": ["Платная реклама в поиске", "Комплекс методов оптимизации сайта для повышения позиций в органической выдаче", "Управление репутацией в соцсетях", "Анализ конкурентов"], "answer": 1, "explain": "SEO направлено на рост видимости и органического (неплатного) трафика по релевантным запросам пользователей."}, {"topic": "Digital и SMM", "q": "OOH (Out Of Home) — это…", "options": ["Реклама в социальных сетях", "Визуальная реклама вне дома (билборды, реклама на транспорте, DOOH)", "Прямой маркетинг", "Email-рассылка"], "answer": 1, "explain": "OOH-реклама привлекает потребителей вне дома: билборды, реклама на остановках, в метро, цифровые экраны (DOOH)."}, {"topic": "Digital и SMM", "q": "Модель управления цифровым маркетингом RACE состоит из этапов:", "options": ["Research, Audit, Communication, Evaluation", "Reach, Act, Convert, Engage", "Read, Analyze, Create, Edit", "Realize, Advance, Control, Expand"], "answer": 1, "explain": "Цифровая RACE: Reach (охват) → Act (действие) → Convert (конверсия) → Engage (вовлечение). С добавлением P (Planning) = pRACE."}, {"topic": "Digital и SMM", "q": "Что чаще всего НЕ отображается в контент-плане?", "options": ["Дата и время публикации", "Тема и формат", "Полный готовый текст всех публикаций", "Целевые KPI"], "answer": 2, "explain": "Контент-план — документ планирования. Готовые тексты, изображения, видео хранятся отдельно, чтобы не перегружать план."}, {"topic": "Digital и SMM", "q": "«Вовлечение» в социальных сетях — это…", "options": ["Покупка рекламы", "Любое действие, выходящее за рамки простого воздействия, подразумевающее взаимодействие", "Только лайки", "Число подписчиков"], "answer": 1, "explain": "По определению Institute for Public Relations: engagement — действие в ответ на контент, выходящее за пределы exposure."}, {"topic": "Правовые основы", "q": "Что такое реклама согласно ФЗ-38 «О рекламе»?", "options": ["Любая платная информация", "Информация, распространённая любым способом, адресованная неопределённому кругу лиц и направленная на привлечение внимания к объекту рекламирования", "Только публикации в СМИ", "Любая информация о товаре"], "answer": 1, "explain": "Ст. 3 ФЗ-38: ключевые признаки рекламы — неопределённый круг лиц и цель привлечения внимания / продвижения объекта на рынке."}, {"topic": "Правовые основы", "q": "Реклама каких товаров НЕ допускается ФЗ-38 «О рекламе»?", "options": ["Автомобилей", "Наркотических средств, табака, взрывчатки, органов человека, цифровой валюты", "Продуктов питания", "Бытовой техники"], "answer": 1, "explain": "Ст. 7 ФЗ-38: запрещена реклама наркотиков, взрывчатки, табака, абортов, услуг по написанию диссертаций, цифровой валюты, иностранных агентов и др."}, {"topic": "Правовые основы", "q": "Какая доля рекламного объёма должна приходиться на социальную рекламу для рекламораспространителя?", "options": ["1%", "3%", "5%", "10%"], "answer": 2, "explain": "Ч. 3 ст. 10 ФЗ-38: заключение договора на распространение социальной рекламы обязательно и составляет 5% годового объёма."}, {"topic": "Правовые основы", "q": "Какая ответственность предусмотрена за нарушение ФЗ-38 «О рекламе»?", "options": ["Только уголовная", "Гражданско-правовая, административная и иные меры по федеральным законам", "Только штрафы", "Никакой"], "answer": 1, "explain": "Ст. 38 ФЗ-38: гражданско-правовая (убытки, контрреклама, моральный вред), административная (КоАП), а также иные меры по ФЗ."}, {"topic": "Правовые основы", "q": "Какой государственный орган контролирует соблюдение законодательства о рекламе?", "options": ["Минцифры", "Роскомнадзор", "Федеральная антимонопольная служба (ФАС)", "Роспотребнадзор"], "answer": 2, "explain": "ФАС России — антимонопольный орган, возбуждает и рассматривает дела по нарушениям рекламного законодательства."}, {"topic": "Правовые основы", "q": "Товарный знак — это…", "options": ["Любой логотип компании", "Обозначение, прошедшее официальную регистрацию в Роспатенте и индивидуализирующее товары", "Только название компании", "Любое изображение в рекламе"], "answer": 1, "explain": "Ст. 1477 ГК РФ. Товарный знак действует 10 лет, продление неограниченно; если не используется 3 года — защиту могут аннулировать."}, {"topic": "Правовые основы", "q": "Какая статья Конституции РФ гарантирует свободу искать, получать и распространять информацию?", "options": ["Ст. 18", "Ст. 29", "Ст. 44", "Ст. 55"], "answer": 1, "explain": "Ст. 29 Конституции РФ — основа правового регулирования информационной и коммуникационной деятельности, включая PR."}, {"topic": "История PR", "q": "В Российской империи накануне Первой мировой войны НЕ использовалось:", "options": ["Печатная реклама и плакаты", "Радио и телевидение для рекламы и PR", "Выставочная деятельность", "Спонсорство и благотворительность"], "answer": 1, "explain": "Регулярного радиовещания и тем более ТВ в начале XX века в России не существовало. Использовались плакаты, выставки, фирменный стиль, лоббизм."}, {"topic": "История PR", "q": "Кто создал агентство «Реклам-конструктор» в СССР в годы НЭПа?", "options": ["Маяковский и Родченко", "Эйзенштейн и Вертов", "Малевич и Кандинский", "Микоян и Калинин"], "answer": 0, "explain": "В.В. Маяковский (тексты, слоганы) и А.М. Родченко (графика, конструктивизм) создавали плакаты для Моссельпрома, ГУМа и др."}, {"topic": "История PR", "q": "Рекламные кампании банка «Империал» (1992–1997, Тимур Бекмамбетов) имели целью…", "options": ["Привлечение только молодёжной аудитории", "Повышение узнаваемости бренда и формирование имиджа надёжного и престижного банка", "Снижение себестоимости услуг", "Маркетинг для регионов"], "answer": 1, "explain": "Использовались исторические сюжеты, эмоциональное воздействие, высокое качество продакшена. Целевая аудитория — зрелая обеспеченная публика."}, {"topic": "История PR", "q": "Главная предпосылка появления PR в постсоветской России — это…", "options": ["Указ Президента 1993 года", "Переход от советской пропагандистской модели к рыночной экономике и политической конкуренции", "Создание Института PR", "Изобретение Интернета"], "answer": 1, "explain": "PR в России возник как ответ на политические изменения, рыночную конкуренцию, замену пропаганды диалоговыми инструментами влияния."}, {"topic": "Политические коммуникации", "q": "Что НЕ относится к принципам политического PR в органах государственной власти?", "options": ["Открытость и прозрачность", "Приоритет общественного интереса", "Манипуляция и сокрытие информации в интересах отдельных чиновников", "Двусторонний диалог"], "answer": 2, "explain": "Деятельность PR-служб госорганов должна способствовать демократии и открытости, а не интересам отдельных лиц или партий."}, {"topic": "Политические коммуникации", "q": "Какие элементы НЕ включает имидж политического деятеля?", "options": ["Внешний (визуальный) образ и речь", "Поведение и репутация", "Ценности и убеждения", "Технические характеристики автомобиля и марка часов в качестве самоцели"], "answer": 3, "explain": "Имидж политика: визуальный образ, речь/коммуникация, поведение, ценности, репутация, биография, образ в СМИ."}, {"topic": "Политические коммуникации", "q": "Целью политической коммуникации является…", "options": ["Только информирование", "Целенаправленное воздействие на аудиторию для формирования общественного мнения и обеспечения поддержки власти", "Только реклама партий", "Изучение зарубежных стран"], "answer": 1, "explain": "Политическая коммуникация — процесс передачи политической информации, идей, ценностей между субъектами политической деятельности."}, {"topic": "Контент и тексты", "q": "Графический способ быстрой и чёткой передачи сложной информации через схемы и рисунки — это:", "options": ["Сторителлинг", "Инфографика", "Слоган", "Маскот"], "answer": 1, "explain": "Инфографика — визуальный способ подачи структурированной сложной информации."}, {"topic": "Контент и тексты", "q": "Соотношение нарратива и сторителлинга:", "options": ["Это синонимы", "Нарратив — структура повествования (каркас), сторителлинг — техника подачи (искусство рассказа)", "Нарратив используется только в кино", "Сторителлинг — более узкое понятие, чем нарратив"], "answer": 1, "explain": "Нарратив — что мы рассказываем (структура). Сторителлинг — как мы это делаем (способ подачи, эмоциональное вовлечение)."}, {"topic": "Контент и тексты", "q": "К аналитическим жанрам медиатекстов (взвешенность фактов, доказательность, авторская позиция) относится:", "options": ["Информационная заметка", "Аналитическая статья, обзор, рецензия, журналистское расследование", "Художественный очерк", "Анекдот"], "answer": 1, "explain": "Аналитика характеризуется доказательной базой и чёткой авторской позицией, в отличие от информационных и художественно-публицистических жанров."}, {"topic": "Контент и тексты", "q": "Что НЕ относится к визуальному сторителлингу?", "options": ["Серия фотографий, рассказывающая историю", "Комикс или иллюстрированная история", "Логотип сам по себе", "Рекламный видеоролик с сюжетом"], "answer": 2, "explain": "Логотип без сюжета — элемент фирменного стиля, но не история. Визуальный сторителлинг требует героя, конфликта и развития действия."}, {"topic": "Контент и тексты", "q": "Сторителлинг в рекламе чаще всего используется в…", "options": ["Контекстной рекламе", "Видеорекламе и имиджевой (брендовой) рекламе", "Прайс-листах", "Каталогах товаров"], "answer": 1, "explain": "Видеореклама за 30–40 секунд позволяет донести историю; имиджевая реклама использует сторителлинг для передачи ценностей и миссии бренда."}, {"topic": "Контент и тексты", "q": "Лаконичности рекламного текста способствуют:", "options": ["Длинные сложноподчинённые предложения", "Короткие предложения, активный залог, императивные конструкции", "Сложная терминология", "Многословное описание характеристик"], "answer": 1, "explain": "Активные конструкции и императивы («Купите!», «Попробуйте!») создают эффект непосредственного обращения и максимальную убедительность."}, {"topic": "Общественное мнение", "q": "Общественное мнение — это…", "options": ["Сумма частных взглядов", "Состояние массового сознания, выражающее отношение различных групп людей к явлениям социальной действительности", "Только мнение большинства", "Только официальная позиция власти"], "answer": 1, "explain": "Общественное мнение формируется как целенаправленно (через институты, СМИ), так и стихийно (через социализацию и опыт)."}, {"topic": "Общественное мнение", "q": "Лидер общественного мнения (Opinion Leader) — это…", "options": ["Глава государства", "Человек, чьё мнение оказывает значительное влияние на взгляды и поведение широкой аудитории", "Главный редактор СМИ", "Финансовый директор корпорации"], "answer": 1, "explain": "Лидеры мнений — узнаваемые эксперты, блогеры, активисты, чьё доверие в сообществе позволяет формировать отношение к продуктам и идеям."}, {"topic": "Общественное мнение", "q": "Под «высшей формой информации» в информационном обществе чаще всего понимаются…", "options": ["Большие данные (Big Data)", "Знания, особенно научные", "Алгоритмы соцсетей", "Новости в реальном времени"], "answer": 1, "explain": "Научное знание — «высшая форма объективной информации в иерархии ценностей сетевого общества» (Бондаренко, Коваленко, Гурин)."}, {"topic": "Общественное мнение", "q": "Слухи передаются по какому коммуникационному каналу?", "options": ["Официальному", "Формальному", "Неформальному (межличностному, grapevine communication)", "Государственному"], "answer": 2, "explain": "Неформальный канал («сарафанное радио») — высокая скорость распространения при возможном искажении информации."}, {"topic": "Общественное мнение", "q": "Креативность — это…", "options": ["Способность копировать чужие идеи", "Уровень творческой одарённости и способность создавать новое нетрадиционными способами", "Только художественные навыки", "Знание трендов"], "answer": 1, "explain": "Компоненты креативности: оригинальность, утилитарность, конфликт между привычным и новым. Уровни (4C): mini-c, little-c, Pro-C, Big-C."}, {"topic": "Внутренние коммуникации", "q": "Внутренний сайт компании — это…", "options": ["Сайт для клиентов", "Корпоративный интранет-ресурс для сотрудников", "Сайт-визитка", "Лендинг для рекламы"], "answer": 1, "explain": "Интранет обеспечивает внутренние коммуникации, доступ к информации и рабочим материалам компании."}, {"topic": "Внутренние коммуникации", "q": "Главная цель внутрикорпоративного PR — это…", "options": ["Привлечение новых клиентов", "Создание единого информационного пространства, повышение лояльности персонала, формирование чувства причастности сотрудников", "Снижение зарплат", "Только информирование о новостях рынка"], "answer": 1, "explain": "Сотрудники — носители корпоративных ценностей и имиджа. Внутренний PR влияет на климат, мотивацию, лояльность, репутацию во внешней среде."}, {"topic": "Прочее", "q": "К константам фирменного / корпоративного стиля относятся:", "options": ["Только логотип", "Товарный знак, логотип, слоган, фирменные цвета, шрифт, маскот, гайдлайн (брендбук)", "Только цвета", "Только название компании"], "answer": 1, "explain": "Константы — неизменные элементы фирменного стиля, обеспечивающие узнаваемость и связь с компанией при любом контакте."}, {"topic": "Прочее", "q": "Цель пресс-конференции:", "options": ["Развлечение журналистов", "Распространение конкретной информации по СМИ через коллективное интервью с заранее объявленной темой", "Анонимное общение", "Продажа товаров"], "answer": 1, "explain": "Пресс-конференция — строго тематическое, формализованное мероприятие, позволяющее получить официальный комментарий из первых уст."}, {"topic": "Прочее", "q": "Фандрайзинговая деятельность — это…", "options": ["Заведование финансами", "Привлечение финансовых и иных ресурсов для реализации социальных, культурных, благотворительных или общественно значимых проектов", "Налоговое планирование", "Поиск инвесторов только для коммерции"], "answer": 1, "explain": "Источники фандрайзинга: частные доноры, спонсоры, гранты, государственная поддержка, краудфандинг."}, {"topic": "Прочее", "q": "Благотворительность — это деятельность, осуществляемая на…", "options": ["Платной основе", "Безвозмездной основе, не предполагающая финансовых и иных обязательств со стороны получателей", "Условиях обязательной отчётности перед СМИ", "Условиях возврата средств"], "answer": 1, "explain": "По ФЗ «О благотворительной деятельности» 1995 г. — добровольная безвозмездная (или на льготных условиях) передача имущества/услуг."}, {"topic": "Прочее", "q": "Спонсорство, в отличие от благотворительности, предполагает…", "options": ["Полную безвозмездность", "Распространение спонсируемым рекламы о спонсоре; спонсорский вклад признаётся платой за рекламу (ст. 19 ФЗ «О рекламе»)", "Анонимность спонсора", "Только государственное финансирование"], "answer": 1, "explain": "Спонсорство — взаимовыгодное сотрудничество; спонсор и спонсируемый признаются рекламодателем и рекламораспространителем."}, {"topic": "Прочее", "q": "Стратегическое планирование деятельности предприятия — это…", "options": ["Краткосрочные тактические решения", "Разработка комплекса мероприятий для достижения целей с учётом эффективного использования ресурсов", "Бухгалтерский учёт", "Только маркетинговое исследование"], "answer": 1, "explain": "Стратегическое планирование определяет последовательность достижения целей и оптимальное использование ресурсов всеми подразделениями фирмы."}, {"topic": "Прочее", "q": "Какие исследования используют выборку, анкету, интервью и анализ результатов?", "options": ["Технические", "Социологические (социальные исследования)", "Бухгалтерские", "Лабораторные"], "answer": 1, "explain": "Социологическое исследование опирается на строгую методологию и репрезентативную выборку — это его отличие от бытовых наблюдений."}, {"topic": "Прочее", "q": "Какие коммуникационные революции выделяет современная наука?", "options": ["Только индустриальная и цифровая", "Революция языка, письменности, книгопечатания, электрических коммуникаций, компьютерно-сетевая", "Только Интернет и социальные сети", "Только изобретение печатного станка"], "answer": 1, "explain": "5 ключевых революций (по Иннис, Маклюэн, Тоффлер): от появления речи (~40 000 лет назад) до сетевой эпохи (с 1970-х)."}, {"topic": "Прочее", "q": "Что такое работа с негативными отзывами в рамках управления репутацией?", "options": ["Удаление всех негативных комментариев", "Признание проблемы, индивидуальный подход, публичный ответ там же, где появился отзыв, конструктивный тон", "Игнорирование", "Запугивание авторов отзывов"], "answer": 1, "explain": "Принципы: оперативность, признание проблемы, индивидуальный подход, публичность, лаконичность. Удалять отзывы нельзя — это разрушает доверие."}];
+
+// === СОСТОЯНИЕ ===
+const state = {
+  mode: 'all',
+  selectedTopics: new Set(),
+  shuffleQ: true,
+  shuffleO: true,
+  showExplanations: true,
+  questions: [],
+  currentIdx: 0,
+  answers: [],   // {qIdx, chosenIdx, correct}
+  startTime: null,
+};
+
+// === УТИЛИТЫ ===
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function $(id) { return document.getElementById(id); }
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// === ИНИЦИАЛИЗАЦИЯ ТЕМ ===
+function initTopics() {
+  const topicCounts = {};
+  QUESTIONS.forEach(q => {
+    topicCounts[q.topic] = (topicCounts[q.topic] || 0) + 1;
+  });
+  const grid = $('topic-grid');
+  grid.innerHTML = '';
+  Object.keys(topicCounts).sort().forEach(topic => {
+    const btn = document.createElement('button');
+    btn.className = 'topic-chip';
+    btn.dataset.topic = topic;
+    btn.innerHTML = `${topic} <span class="count">${topicCounts[topic]}</span>`;
+    btn.onclick = () => {
+      if (state.selectedTopics.has(topic)) {
+        state.selectedTopics.delete(topic);
+        btn.classList.remove('selected');
+      } else {
+        state.selectedTopics.add(topic);
+        btn.classList.add('selected');
+      }
+      updateCountInfo();
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function updateCountInfo() {
+  let count = 0;
+  if (state.mode === 'all') count = QUESTIONS.length;
+  else if (state.mode === 'short') count = Math.min(20, QUESTIONS.length);
+  else if (state.mode === 'mini') count = Math.min(10, QUESTIONS.length);
+  else if (state.mode === 'topic') {
+    count = QUESTIONS.filter(q => state.selectedTopics.has(q.topic)).length;
+  }
+  $('question-count-info').textContent = count > 0 ? `${count} вопрос${count === 1 ? '' : (count < 5 ? 'а' : 'ов')}` : 'Выберите хотя бы одну тему';
+  $('start-btn').disabled = count === 0;
+}
+
+// === MODE SELECTION ===
+document.querySelectorAll('.mode-card').forEach(card => {
+  card.onclick = () => {
+    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    state.mode = card.dataset.mode;
+    $('topics-block').style.display = state.mode === 'topic' ? 'block' : 'none';
+    updateCountInfo();
+  };
+});
+
+$('select-all-topics').onclick = () => {
+  const allSelected = state.selectedTopics.size === Object.keys(QUESTIONS.reduce((acc, q) => (acc[q.topic] = 1, acc), {})).length;
+  if (allSelected) {
+    state.selectedTopics.clear();
+    document.querySelectorAll('.topic-chip').forEach(c => c.classList.remove('selected'));
+    $('select-all-topics').textContent = 'Выбрать все';
+  } else {
+    document.querySelectorAll('.topic-chip').forEach(c => {
+      c.classList.add('selected');
+      state.selectedTopics.add(c.dataset.topic);
+    });
+    $('select-all-topics').textContent = 'Снять все';
+  }
+  updateCountInfo();
+};
+
+// === TOGGLES ===
+function setupToggle(id, stateKey) {
+  $(id).onclick = () => {
+    state[stateKey] = !state[stateKey];
+    $(id).classList.toggle('on', state[stateKey]);
+  };
+}
+setupToggle('shuffle-q-toggle', 'shuffleQ');
+setupToggle('shuffle-o-toggle', 'shuffleO');
+setupToggle('explain-toggle', 'showExplanations');
+
+// === START QUIZ ===
+$('start-btn').onclick = () => {
+  let pool = QUESTIONS.slice();
+  if (state.mode === 'topic') {
+    pool = pool.filter(q => state.selectedTopics.has(q.topic));
+  }
+  if (state.shuffleQ) pool = shuffle(pool);
+  if (state.mode === 'short') pool = pool.slice(0, 20);
+  if (state.mode === 'mini') pool = pool.slice(0, 10);
+
+  // Prepare options shuffling
+  state.questions = pool.map(q => {
+    const order = q.options.map((_, i) => i);
+    const shuffled = state.shuffleO ? shuffle(order) : order;
+    return {
+      ...q,
+      displayOptions: shuffled.map(i => q.options[i]),
+      correctDisplayIdx: shuffled.indexOf(q.answer),
+    };
+  });
+
+  state.currentIdx = 0;
+  state.answers = [];
+  state.startTime = Date.now();
+  showQuestion();
+  showScreen('quiz-screen');
+};
+
+// === SHOW QUESTION ===
+function showQuestion() {
+  const q = state.questions[state.currentIdx];
+  const total = state.questions.length;
+  const progress = ((state.currentIdx) / total) * 100;
+  $('progress-fill').style.width = progress + '%';
+  $('progress-text').textContent = `Вопрос ${state.currentIdx + 1} из ${total}`;
+  $('topic-tag').textContent = q.topic;
+  $('question-text').textContent = q.q;
+
+  const optionsEl = $('options');
+  optionsEl.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+  q.displayOptions.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `
+      <span class="option-letter">${letters[idx]}</span>
+      <span class="option-text">${opt}</span>
+    `;
+    btn.onclick = () => selectAnswer(idx);
+    optionsEl.appendChild(btn);
+  });
+
+  $('explanation').classList.remove('show');
+  $('next-btn').disabled = true;
+  $('next-btn').textContent = state.currentIdx === total - 1 ? 'Завершить →' : 'Далее →';
+}
+
+// === SELECT ANSWER ===
+function selectAnswer(displayIdx) {
+  const q = state.questions[state.currentIdx];
+  const isCorrect = displayIdx === q.correctDisplayIdx;
+  state.answers.push({
+    qIdx: state.currentIdx,
+    chosenDisplayIdx: displayIdx,
+    isCorrect: isCorrect,
+  });
+
+  // Visual feedback
+  const optionEls = document.querySelectorAll('.option');
+  optionEls.forEach((el, i) => {
+    el.disabled = true;
+    if (i === q.correctDisplayIdx) {
+      el.classList.add('correct');
+    } else if (i === displayIdx && !isCorrect) {
+      el.classList.add('incorrect');
+    } else {
+      el.classList.add('dimmed');
+    }
+  });
+
+  // Show explanation
+  if (state.showExplanations) {
+    $('explanation-label').textContent = isCorrect ? '✓ Верно' : '✗ Не совсем';
+    $('explanation-text').textContent = q.explain;
+    $('explanation').classList.add('show');
+  }
+
+  $('next-btn').disabled = false;
+}
+
+// === NAVIGATION ===
+$('next-btn').onclick = () => {
+  if (state.currentIdx < state.questions.length - 1) {
+    state.currentIdx++;
+    showQuestion();
+  } else {
+    showResults();
+  }
+};
+
+$('exit-btn').onclick = () => {
+  if (state.answers.length === 0 || confirm('Завершить тест? Прогресс будет сохранён только для отвеченных вопросов.')) {
+    showResults();
+  }
+};
+
+// === RESULTS ===
+function showResults() {
+  const correct = state.answers.filter(a => a.isCorrect).length;
+  const total = state.answers.length;
+  const percent = total === 0 ? 0 : Math.round((correct / total) * 100);
+  const elapsed = Math.round((Date.now() - state.startTime) / 1000);
+  const minutes = Math.floor(elapsed / 60);
+  const seconds = elapsed % 60;
+
+  $('score-percent').textContent = percent + '%';
+  $('score-fraction').textContent = `${correct} / ${total}`;
+  $('stat-correct').textContent = correct;
+  $('stat-wrong').textContent = total - correct;
+  $('stat-total').textContent = total;
+  $('stat-time').textContent = minutes + ' мин ' + seconds + ' с';
+
+  const circle = $('score-circle');
+  circle.className = 'score-circle';
+  let message;
+  if (percent >= 90) { circle.classList.add('excellent'); message = 'Отлично! Вы готовы к ГИА 🎓'; }
+  else if (percent >= 75) { circle.classList.add('good'); message = 'Хорошо! Осталось закрепить отдельные темы'; }
+  else if (percent >= 60) { circle.classList.add('average'); message = 'Неплохо, но есть над чем поработать'; }
+  else { circle.classList.add('poor'); message = 'Нужно повторить материал'; }
+  $('score-message').textContent = message;
+
+  $('review-card').style.display = 'none';
+  showScreen('results-screen');
+  buildReview();
+}
+
+function buildReview() {
+  const wrongList = $('wrong-list');
+  const correctList = $('correct-list');
+  wrongList.innerHTML = '';
+  correctList.innerHTML = '';
+  let wrongCount = 0, correctCount = 0;
+
+  state.answers.forEach((ans, i) => {
+    const q = state.questions[ans.qIdx];
+    const chosenText = q.displayOptions[ans.chosenDisplayIdx];
+    const correctText = q.displayOptions[q.correctDisplayIdx];
+
+    const div = document.createElement('div');
+    div.className = 'review-item' + (ans.isCorrect ? ' correct' : '');
+
+    let ansHtml;
+    if (ans.isCorrect) {
+      ansHtml = `<div class="review-item-ans"><span class="right">✓ ${correctText}</span></div>`;
+    } else {
+      ansHtml = `<div class="review-item-ans"><span class="wrong">✗ Ваш ответ: ${chosenText}</span><br><span class="right">✓ Правильно: ${correctText}</span></div>`;
+    }
+
+    div.innerHTML = `
+      <div class="review-item-meta">${q.topic}</div>
+      <div class="review-item-q">${q.q}</div>
+      ${ansHtml}
+      <div class="review-item-ans" style="margin-top:8px; color: var(--text-muted); font-size: 13px;">${q.explain}</div>
+    `;
+
+    if (ans.isCorrect) { correctList.appendChild(div); correctCount++; }
+    else { wrongList.appendChild(div); wrongCount++; }
+  });
+
+  $('wrong-section-title').textContent = wrongCount > 0 ? `Ошибки (${wrongCount})` : '';
+  $('wrong-section-title').style.display = wrongCount > 0 ? '' : 'none';
+  $('correct-section-title').textContent = correctCount > 0 ? `Правильные ответы (${correctCount})` : '';
+  $('correct-section-title').style.display = correctCount > 0 ? '' : 'none';
+}
+
+$('review-btn').onclick = () => {
+  const rc = $('review-card');
+  rc.style.display = rc.style.display === 'none' ? 'block' : 'none';
+  if (rc.style.display === 'block') {
+    rc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+};
+
+$('retry-btn').onclick = () => {
+  $('start-btn').click();
+};
+
+$('home-btn').onclick = () => {
+  showScreen('start-screen');
+};
+
+// === INIT ===
+initTopics();
+updateCountInfo();
+</script>
+</body>
+</html>
